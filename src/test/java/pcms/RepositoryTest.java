@@ -1,6 +1,8 @@
 package pcms;
 
-import static org.junit.jupiter.api.Assertions.*; // NOPMD
+// CHECKSTYLE:OFF
+import static org.junit.jupiter.api.Assertions.*;
+// CHECKSTYLE:ON
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

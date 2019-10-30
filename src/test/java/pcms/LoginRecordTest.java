@@ -1,7 +1,10 @@
 package pcms;
 
-import static org.junit.jupiter.api.Assertions.*; // NOPMD
+// CHECKSTYLE:OFF
+import static org.junit.jupiter.api.Assertions.*;
+// CHECKSTYLE:ON
 
+import java.time.Instant;
 import org.junit.jupiter.api.Test;
 import pcms.loginrecord.LoginRecord;
 
@@ -38,7 +41,7 @@ class LoginRecordTest {
     public void testIncompleteLoginRecord() {
         final LoginRecord loginRecord = new LoginRecord.Builder()
                 .withId("L008")
-                .withAction(LoginRecord.Action.LOGOUT);
+                .withAction(LoginRecord.Action.LOGOUT)
                 .build();
 
         assertEquals("L008", loginRecord.getId());
@@ -51,11 +54,11 @@ class LoginRecordTest {
     @Test
     public void testConstructFromRow() {
         final LoginRecord loginRecord = new LoginRecord(
-                "L00013,U00007,LOGOUT,2019-10-29T23:10:55+08:00");
+                "L00013,U00007,LOGOUT,2019-10-29T15:10:55Z");
         assertEquals("L00013", loginRecord.getId());
         assertEquals("U00007", loginRecord.getUserId());
         assertEquals(LoginRecord.Action.LOGOUT, loginRecord.getAction());
-        assertEquals(Instant.ofEpochSecond(1572361855), loginRecord.getTimestamp());
+        assertEquals(Instant.ofEpochSecond(1_572_361_855), loginRecord.getTimestamp());
     }
 
     /** Test to row. */

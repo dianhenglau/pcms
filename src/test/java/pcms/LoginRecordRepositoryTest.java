@@ -1,19 +1,25 @@
 package pcms; // NOPMD
 
-import static org.junit.jupiter.api.Assertions.*; // NOPMD
-import static org.mockito.Mockito.*; // NOPMD
+// CHECKSTYLE:OFF
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+// CHECKSTYLE:ON
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pcms.loginrecord.LoginRecord;
 import pcms.loginrecord.LoginRecordRepository;
 import pcms.user.User;
 import pcms.user.UserRepository;
 
 /** Test login record repository. */
+@ExtendWith(MockitoExtension.class)
 class LoginRecordRepositoryTest {
     /** Row 1 of login_records.csv. */
     private static final String ROW1 = "L00001,U00001,LOGIN,1970-01-01T00:00:00Z";
@@ -51,62 +57,31 @@ class LoginRecordRepositoryTest {
             // Mocking
             final User user = mock(User.class);
             final UserRepository userRepository = mock(UserRepository.class);
-            when(userRepository.findWithId(any())).thenReturn(Optional.of(user));
+            when(userRepository.findWithId(any()))
+                    .thenReturn(Optional.of(user))
+                    .thenReturn(Optional.empty());
 
             // Start testing.
             final LoginRecordRepository loginRecordRepository = new LoginRecordRepository(
                     filePath, userRepository);
             final LoginRecord.Builder builder = new LoginRecord.Builder()
-                    .withFullName("Kristina Clarke")
-                    .withAddress("17 Penn Street, Drexel Hill, PA 19026")
-                    .withEmail("kristina@example.com")
-                    .withIsAdministrator(false)
-                    .withIsProductManager(true)
-                    .withLoginRecordname("kristina")
-                    .withPassword("kristina123")
-                    .withIsActive(true);
+                    .withUserId("U00003")
+                    .withAction(LoginRecord.Action.LOGOUT);
 
             LoginRecord newLoginRecord = builder.build();
             newLoginRecord = loginRecordRepository.insert(newLoginRecord);
+            verify(userRepository).findWithId("U00003");
+
             assertEquals(
                     String.join("", "7\n", CONTENT.substring(2), newLoginRecord.toRow(), "\n"),
                     Files.readString(filePath, StandardCharsets.UTF_8));
 
-            InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
-                loginRecordRepository.insert(builder.withLoginRecordname("").build());
+            final InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
+                loginRecordRepository.insert(builder.withUserId("U00008").build());
             });
-            assertEquals("loginRecordname", ex.getLabel()); // NOPMD
-            assertEquals("LoginRecordname" + MSG1, ex.getMessage()); // NOPMD
-
-            ex = assertThrows(InvalidFieldException.class, () -> {
-                loginRecordRepository.insert(builder.withLoginRecordname("name with space").build());
-            });
-            assertEquals("loginRecordname", ex.getLabel());
-            assertEquals("LoginRecordname" + MSG2, ex.getMessage());
-
-            ex = assertThrows(InvalidFieldException.class, () -> {
-                loginRecordRepository.insert(builder.withLoginRecordname("5tart_with_number").build());
-            });
-            assertEquals("loginRecordname", ex.getLabel());
-            assertEquals("LoginRecordname" + MSG2, ex.getMessage());
-
-            ex = assertThrows(InvalidFieldException.class, () -> {
-                loginRecordRepository.insert(builder.withLoginRecordname("contain_$ymbol").build());
-            });
-            assertEquals("loginRecordname", ex.getLabel());
-            assertEquals("LoginRecordname" + MSG2, ex.getMessage());
-
-            ex = assertThrows(InvalidFieldException.class, () -> { // Duplicate loginRecordname
-                loginRecordRepository.insert(builder.withLoginRecordname("kristina").build());
-            });
-            assertEquals("loginRecordname", ex.getLabel());
-            assertEquals("LoginRecordname" + MSG3, ex.getMessage());
-
-            ex = assertThrows(InvalidFieldException.class, () -> {
-                loginRecordRepository.insert(builder.withLoginRecordname("isabelle").withPassword("").build());
-            });
-            assertEquals("password", ex.getLabel());
-            assertEquals("Password" + MSG1, ex.getMessage());
+            assertEquals("id", ex.getLabel());
+            assertEquals("Record with ID U00008 not found.", ex.getMessage());
+            verify(userRepository).findWithId("U00008");
         } catch (IOException ex) {
             fail(ex);
         }
@@ -118,19 +93,22 @@ class LoginRecordRepositoryTest {
         try {
             final Path filePath = TestUtil.getDataPath("non_existent_file.csv");
             Files.deleteIfExists(filePath);
-            final LoginRecordRepository loginRecordRepository = new LoginRecordRepository(filePath);
+
+            // Mocking
+            final User user = mock(User.class);
+            final UserRepository userRepository = mock(UserRepository.class);
+            when(userRepository.findWithId(any())).thenReturn(Optional.of(user));
+
+            final LoginRecordRepository loginRecordRepository 
+                    = new LoginRecordRepository(filePath, userRepository);
 
             LoginRecord newLoginRecord = new LoginRecord.Builder()
-                    .withFullName("Barack Obama")
-                    .withAddress("75 Peachtree Street, Lansdale, PA 19446")
-                    .withEmail("barack@example.com")
-                    .withIsAdministrator(false)
-                    .withIsProductManager(true)
-                    .withLoginRecordname("barack")
-                    .withPassword("barack123")
-                    .withIsActive(true)
+                    .withUserId("U00001")
+                    .withAction(LoginRecord.Action.LOGIN)
                     .build();
             newLoginRecord = loginRecordRepository.insert(newLoginRecord);
+
+            verify(userRepository).findWithId("U00001");
             assertEquals(
                     String.join("\n", "2", newLoginRecord.toRow(), ""),
                     Files.readString(filePath, StandardCharsets.UTF_8));
@@ -138,5 +116,4 @@ class LoginRecordRepositoryTest {
             fail(ex);
         }
     }
-
 }

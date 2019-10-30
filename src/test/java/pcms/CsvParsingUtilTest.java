@@ -1,6 +1,8 @@
 package pcms; // NOPMD
 
-import static org.junit.jupiter.api.Assertions.*; // NOPMD
+// CHECKSTYLE:OFF
+import static org.junit.jupiter.api.Assertions.*;
+// CHECKSTYLE:ON
 import static pcms.CsvParsingUtil.decode;
 import static pcms.CsvParsingUtil.encode;
 import static pcms.CsvParsingUtil.splitIntoCols;

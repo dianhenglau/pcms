@@ -14,11 +14,6 @@ public final class LoginRecord implements Model {
     /** User repository which help to get user. */
     private static Optional<UserRepository> userRepository = Optional.empty();
 
-    /** Set user repository. */
-    public static void setUserRepository(final UserRepository repository) {
-        userRepository = Optional.of(repository);
-    }
-
     /** List of actions. */
     public enum Action {
         LOGIN, LOGOUT
@@ -88,6 +83,11 @@ public final class LoginRecord implements Model {
     /** Get user. */
     public User getUser() {
         return userRepository.get().findWithId(userId).get();
+    }
+
+    /** Set user repository. */
+    public static void setUserRepository(final UserRepository repository) {
+        userRepository = Optional.of(repository);
     }
 
     /** Builder. */

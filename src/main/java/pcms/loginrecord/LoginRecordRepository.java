@@ -4,13 +4,12 @@ import java.nio.file.Path;
 import java.time.Instant;
 import pcms.Repository;
 import pcms.ValidationUtil;
-import pcms.user.User;
 import pcms.user.UserRepository;
 
 /** Models login record repository. */
 public final class LoginRecordRepository extends Repository<LoginRecord> {
     /** Helps to check foreign key. */
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     /** Constructor. */
     public LoginRecordRepository(final Path dataPath, final UserRepository userRepository) {

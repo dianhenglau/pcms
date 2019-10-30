@@ -1,6 +1,8 @@
 package pcms;
 
-import static org.junit.jupiter.api.Assertions.*; // NOPMD
+// CHECKSTYLE:OFF
+import static org.junit.jupiter.api.Assertions.*;
+// CHECKSTYLE:ON
 
 import org.junit.jupiter.api.Test;
 import pcms.user.User;

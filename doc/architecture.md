@@ -20,6 +20,7 @@ Model-View-Controller
 
 2. [Discussion needed] A class is placed under `common` package if and only if it does not depend on other class in this project.
 
+
 # View Composition Hierarchy
 
     RootView

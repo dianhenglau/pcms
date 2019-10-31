@@ -106,6 +106,7 @@ public final class App {
 
         userController.init();
         profileController.init();
+        loginRecordController.init();
 
         menuController.init(
                 loginController,

@@ -164,6 +164,7 @@ public final class ViewUtil {
     public static JTextField createTextField(final int columns) {
         final JTextField tf = new JTextField(columns);
         tf.setMaximumSize(new Dimension(tf.getPreferredSize().width, 25));
+        tf.setPreferredSize(new Dimension(tf.getPreferredSize().width, 25));
         tf.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(0.6f, 0.6f, 0.6f)),
                 BorderFactory.createEmptyBorder(0, 7, 0, 7)));

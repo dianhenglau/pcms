@@ -37,15 +37,17 @@ public final class LoginRecordController {
 
     /** List loginRecords. */
     public void index(final String search) {
+        final String lowerCase = search.toLowerCase(Locale.US);
+
         rootView.render(RootView.Views.MAIN_VIEW);
         rootView.mainView.contentView.render(ContentView.Views.LOGIN_RECORD_LIST);
 
         if (search.isEmpty()) {
             loginRecordListView.render(loginRecordRepository.all());
         } else {
-            loginRecordListView.render(loginRecordRepository.filter(
-                    x -> x.getUserId().toLowerCase(Locale.US)
-                            .contains(search.toLowerCase(Locale.US))));
+            loginRecordListView.render(loginRecordRepository.filter(x -> 
+                    x.getUserId().toLowerCase(Locale.US).contains(lowerCase)
+                    || x.getUser().getUsername().toLowerCase(Locale.US).contains(lowerCase)));
         }
     }
 }

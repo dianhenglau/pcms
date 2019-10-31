@@ -57,7 +57,7 @@ public final class LoginController {
         rootView.frame.addWindowListener(new WindowAdapter() {
             /** Logout when window is closing. */
             @Override
-            public void windowClosing(WindowEvent e) {
+            public void windowClosing(final WindowEvent e) {
                 if (!session.getUser().isEmpty()) {
                     logout();
                 }

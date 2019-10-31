@@ -2,6 +2,7 @@ package pcms;
 
 import java.awt.CardLayout;
 import javax.swing.JPanel;
+import pcms.loginrecord.LoginRecordListView;
 import pcms.profile.EditProfileView;
 import pcms.profile.ProfileView;
 import pcms.user.AddUserView;
@@ -14,7 +15,8 @@ public final class ContentView {
     /** List of children views. */
     public enum Views {
         USER_LIST, USER_INFO, ADD_USER, EDIT_USER, 
-        PROFILE, EDIT_PROFILE
+        PROFILE, EDIT_PROFILE,
+        LOGIN_RECORD_LIST
     }
 
     /** User list view. */
@@ -31,6 +33,9 @@ public final class ContentView {
     /** Edit profile view. */
     public final EditProfileView editProfileView;
 
+    /** Login record list view. */
+    public final LoginRecordListView loginRecordListView;
+
     /** Pane. */
     public final JPanel pane;
     /** Card layout. */
@@ -43,7 +48,8 @@ public final class ContentView {
             final AddUserView addUserView,
             final EditUserView editUserView,
             final ProfileView profileView,
-            final EditProfileView editProfileView) {
+            final EditProfileView editProfileView,
+            final LoginRecordListView loginRecordListView) {
 
         this.userListView = userListView;
         this.userInfoView = userInfoView;
@@ -51,6 +57,7 @@ public final class ContentView {
         this.editUserView = editUserView;
         this.profileView = profileView;
         this.editProfileView = editProfileView;
+        this.loginRecordListView = loginRecordListView;
 
         cardLayout = new CardLayout();
         pane = new JPanel(cardLayout);
@@ -61,6 +68,7 @@ public final class ContentView {
         pane.add(editUserView.pane, Views.EDIT_USER.name());
         pane.add(profileView.pane, Views.PROFILE.name());
         pane.add(editProfileView.pane, Views.EDIT_PROFILE.name());
+        pane.add(loginRecordListView.pane, Views.LOGIN_RECORD_LIST.name());
     }
 
     /** Show a view with given key. */

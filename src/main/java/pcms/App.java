@@ -4,6 +4,10 @@ import java.nio.file.Path;
 import javax.swing.SwingUtilities;
 import pcms.login.LoginController;
 import pcms.login.LoginView;
+import pcms.loginrecord.LoginRecord;
+import pcms.loginrecord.LoginRecordController;
+import pcms.loginrecord.LoginRecordListView;
+import pcms.loginrecord.LoginRecordRepository;
 import pcms.menu.MenuController;
 import pcms.menu.MenuView;
 import pcms.profile.EditProfileView;
@@ -22,6 +26,8 @@ public final class App {
     private final Session session;
     /** User repository. */
     private final UserRepository userRepository;
+    /** Login record repository. */
+    private final LoginRecordRepository loginRecordRepository;
 
     /** Construct app. */
     public App() {
@@ -32,6 +38,9 @@ public final class App {
         session = new Session();
         // Create models.
         userRepository = new UserRepository(getDataPath("users.csv"));
+        loginRecordRepository = new LoginRecordRepository(
+                getDataPath("login_records.csv"), userRepository);
+        LoginRecord.setUserRepository(userRepository);
     }
 
     /** Run app. */
@@ -45,6 +54,8 @@ public final class App {
         final ProfileView profileView = new ProfileView();
         final EditProfileView editProfileView = new EditProfileView();
 
+        final LoginRecordListView loginRecordListView = new LoginRecordListView();
+
         final MenuView menuView = new MenuView();
         final ContentView contentView = new ContentView(
                 userListView,
@@ -52,7 +63,8 @@ public final class App {
                 addUserView,
                 editUserView,
                 profileView,
-                editProfileView);
+                editProfileView,
+                loginRecordListView);
 
         final MainView mainView = new MainView(menuView, contentView);
         final LoginView loginView = new LoginView();
@@ -74,6 +86,11 @@ public final class App {
                 profileView,
                 editProfileView,
                 rootView);
+        final LoginRecordController loginRecordController = new LoginRecordController(
+                session,
+                loginRecordRepository,
+                loginRecordListView,
+                rootView);
 
         final MenuController menuController = new MenuController(
                 session,
@@ -83,6 +100,7 @@ public final class App {
         final LoginController loginController = new LoginController(
                 session,
                 userRepository,
+                loginRecordRepository,
                 loginView,
                 rootView);
 
@@ -92,7 +110,8 @@ public final class App {
         menuController.init(
                 loginController,
                 userController,
-                profileController);
+                profileController,
+                loginRecordController);
 
         loginController.init(userController);
 

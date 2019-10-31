@@ -57,7 +57,15 @@ public final class ViewUtil {
     public static JPanel createListControlPane(final JButton addBtn, final JTextField searchTf) {
         final JPanel pane = createControlPane();
         pane.add(addBtn);
-        pane.add(addBtn);
+        pane.add(Box.createHorizontalGlue());
+        pane.add(new JLabel("Search: "));
+        pane.add(searchTf);
+        return pane;
+    }
+
+    /** Create list's control pane without button. */
+    public static JPanel createListControlPane(final JTextField searchTf) {
+        final JPanel pane = createControlPane();
         pane.add(Box.createHorizontalGlue());
         pane.add(new JLabel("Search: "));
         pane.add(searchTf);

@@ -7,6 +7,8 @@ import pcms.InvalidFieldException;
 import pcms.RootView;
 import pcms.Session;
 import pcms.ValidationUtil;
+import pcms.loginrecord.LoginRecord;
+import pcms.loginrecord.LoginRecordRepository;
 import pcms.user.User;
 import pcms.user.UserController;
 import pcms.user.UserRepository;
@@ -17,6 +19,8 @@ public final class LoginController {
     private final Session session;
     /** User repository. */
     private final UserRepository userRepository;
+    /** Login record repository. */
+    private final LoginRecordRepository loginRecordRepository;
     /** User controller. */
     private Optional<UserController> userController;
 
@@ -29,11 +33,13 @@ public final class LoginController {
     public LoginController(
             final Session session,
             final UserRepository userRepository,
+            final LoginRecordRepository loginRecordRepository,
             final LoginView loginView,
             final RootView rootView) {
 
         this.session = session;
         this.userRepository = userRepository;
+        this.loginRecordRepository = loginRecordRepository;
         this.loginView = loginView;
         this.rootView = rootView;
         userController = Optional.empty();
@@ -80,6 +86,11 @@ public final class LoginController {
                         + " contact administrator.");
             }
 
+            loginRecordRepository.insert(new LoginRecord.Builder()
+                    .withUserId(user.getId())
+                    .withAction(LoginRecord.Action.LOGIN)
+                    .build());
+
             session.setUser(user);
             rootView.mainView.menuView.render(user);
             userController.get().index("");
@@ -91,6 +102,11 @@ public final class LoginController {
 
     /** Logout. */
     public void logout() {
+        loginRecordRepository.insert(new LoginRecord.Builder()
+                .withUserId(session.getUser().get().getId())
+                .withAction(LoginRecord.Action.LOGOUT)
+                .build());
+
         session.clear();
         index();
     }

@@ -16,7 +16,20 @@ public final class LoginRecord implements Model {
 
     /** List of actions. */
     public enum Action {
-        LOGIN, LOGOUT
+        LOGIN {
+            /** Convert to string. */
+            @Override
+            public String toString() {
+                return "Login";
+            }
+        },
+        LOGOUT {
+            /** Convert to string. */
+            @Override
+            public String toString() {
+                return "Logout";
+            }
+        }
     }
 
     /** ID. */

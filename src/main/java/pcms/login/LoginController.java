@@ -1,5 +1,7 @@
 package pcms.login;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +54,15 @@ public final class LoginController {
         loginView.usernameTf.addActionListener(e -> login());
         loginView.passwordPf.addActionListener(e -> login());
         loginView.loginBtn.addActionListener(e -> login());
+        rootView.frame.addWindowListener(new WindowAdapter() {
+            /** Logout when window is closing. */
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (!session.getUser().isEmpty()) {
+                    logout();
+                }
+            }
+        });
     }
 
     /** Show login page. */

@@ -57,6 +57,8 @@ public final class UserController {
 
     /** List users. */
     public void index(final String search) {
+        final String lowerCase = search.toLowerCase(Locale.US);
+
         rootView.render(RootView.Views.MAIN_VIEW);
         rootView.mainView.contentView.render(ContentView.Views.USER_LIST);
 
@@ -65,12 +67,9 @@ public final class UserController {
         } else {
             userListView.render(
                     userRepository.filter(x ->
-                        x.getId().toLowerCase(Locale.US)
-                            .contains(search.toLowerCase(Locale.US))
-                        || x.getUsername().toLowerCase(Locale.US)
-                            .contains(search.toLowerCase(Locale.US))
-                        || x.getFullName().toLowerCase(Locale.US)
-                            .contains(search.toLowerCase(Locale.US))),
+                        x.getId().toLowerCase(Locale.US).contains(lowerCase)
+                        || x.getUsername().toLowerCase(Locale.US).contains(lowerCase)
+                        || x.getFullName().toLowerCase(Locale.US).contains(lowerCase)),
                     e -> show(e.getActionCommand()));
         }
     }

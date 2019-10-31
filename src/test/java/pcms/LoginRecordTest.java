@@ -2,13 +2,20 @@ package pcms;
 
 // CHECKSTYLE:OFF
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 // CHECKSTYLE:ON
 
 import java.time.Instant;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pcms.loginrecord.LoginRecord;
+import pcms.user.User;
+import pcms.user.UserRepository;
 
 /** Test LoginRecord. */
+@ExtendWith(MockitoExtension.class)
 class LoginRecordTest {
     /** Test empty login record. */
     @Test 
@@ -78,5 +85,18 @@ class LoginRecordTest {
     public void testFromAndToRow() {
         final String s = "L54321,U12345,LOGOUT,2019-10-29T23:07:07Z";
         assertEquals(s, new LoginRecord(s).toRow());
+    }
+
+    /** Test get user. */
+    @Test
+    public void testGetUser() {
+        // Mocking
+        final User user = mock(User.class);
+        final UserRepository userRepository = mock(UserRepository.class);
+        when(userRepository.findWithId(any())).thenReturn(Optional.of(user));
+
+        LoginRecord.setUserRepository(userRepository);
+        final LoginRecord loginRecord = new LoginRecord.Builder().build();
+        assertSame(user, loginRecord.getUser());
     }
 }

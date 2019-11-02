@@ -81,7 +81,7 @@ public final class ContentView {
         this.addCategoryView = addCategoryView;
         this.editCategoryView = editCategoryView;
 
-        cardLayout = new CardLayout();
+        cardLayout = ViewUtil.createVariableSizeCardLayout();
         pane = new JPanel(cardLayout);
 
         pane.add(userListView.pane, Views.USER_LIST.name());

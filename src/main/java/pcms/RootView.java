@@ -5,6 +5,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import pcms.login.LoginView;
 
 /** Root view. */
@@ -23,6 +24,8 @@ public final class RootView {
     public final JFrame frame;
     /** Pane. */
     private final JPanel pane;
+    /** Scroll pane. */
+    private final JScrollPane scrollPane;
     /** Card layout. */
     private final CardLayout cardLayout;
     /** Success icon. */
@@ -39,12 +42,13 @@ public final class RootView {
         this.loginView = loginView;
 
         frame = new JFrame("PCMS");
-        cardLayout = new CardLayout();
+        cardLayout = ViewUtil.createVariableSizeCardLayout();
         pane = new JPanel(cardLayout);
+        scrollPane = ViewUtil.createScrollPane(pane);
 
         pane.add(mainView.pane, Views.MAIN_VIEW.name());
         pane.add(loginView.pane, Views.LOGIN_VIEW.name());
-        frame.getContentPane().add(ViewUtil.createScrollPane(pane));
+        frame.getContentPane().add(scrollPane);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -55,6 +59,8 @@ public final class RootView {
     /** Show a view with given key. */
     public void render(final Views key) {
         cardLayout.show(pane, key.name());
+        scrollPane.getVerticalScrollBar().setValue(0);
+        scrollPane.getHorizontalScrollBar().setValue(0);
     }
 
     /** Show success message. */

@@ -1,8 +1,12 @@
 package pcms;
 
+import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Insets;
+import java.util.Arrays;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -253,5 +257,25 @@ public final class ViewUtil {
         final JPasswordField pf = new JPasswordField();
         styleCenteredInput(pf);
         return pf;
+    }
+
+    /** Create variable size card layout. */
+    public static CardLayout createVariableSizeCardLayout() {
+        return new CardLayout() {
+            /** Preferred layout size. */
+            @Override
+            public Dimension preferredLayoutSize(final Container parent) {
+                return Arrays.stream(parent.getComponents())
+                        .filter(x -> x.isVisible())
+                        .findFirst()
+                        .map(x -> {
+                            final Insets insets = parent.getInsets();
+                            final Dimension pref = x.getPreferredSize();
+                            pref.width += insets.left + insets.right;
+                            pref.height += insets.top + insets.bottom;
+                            return pref; })
+                        .orElse(super.preferredLayoutSize(parent));
+            }
+        };
     }
 }

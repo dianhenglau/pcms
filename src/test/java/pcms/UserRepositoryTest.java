@@ -44,7 +44,7 @@ class UserRepositoryTest {
         assertTrue(Repository.class.isAssignableFrom(UserRepository.class));
 
         final UserRepository userRepository = new UserRepository(
-                TestUtil.getDataPath("users.csv")); // NOPMD
+                TestUtil.getDataPath("users.csv"));
         assertNotNull(userRepository);
     }
 

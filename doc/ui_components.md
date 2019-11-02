@@ -174,7 +174,7 @@ Administrator only.
     - ID
     - Name
     - View button
-    - Remove button
+    - Delete button
 
 # Category Info Page
 
@@ -217,7 +217,7 @@ Administrator only.
     - Discount
     - Supplier
     - View button
-    - Remove button
+    - Delete button
 
 # Product Info Page
 
@@ -283,7 +283,7 @@ Product manager only.
     - Created on
     - Created by
     - View button
-    - Remove button
+    - Delete button
 
 # Catalog Info Page
 

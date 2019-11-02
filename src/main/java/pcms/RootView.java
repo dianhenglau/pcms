@@ -1,12 +1,10 @@
 package pcms;
 
 import java.awt.CardLayout;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import pcms.login.LoginView;
 
 /** Root view. */
@@ -43,12 +41,10 @@ public final class RootView {
         frame = new JFrame("PCMS");
         cardLayout = new CardLayout();
         pane = new JPanel(cardLayout);
-        final JScrollPane scrollPane = new JScrollPane(pane);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         pane.add(mainView.pane, Views.MAIN_VIEW.name());
         pane.add(loginView.pane, Views.LOGIN_VIEW.name());
-        frame.getContentPane().add(scrollPane);
+        frame.getContentPane().add(ViewUtil.createScrollPane(pane));
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();

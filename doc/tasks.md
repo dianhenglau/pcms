@@ -12,8 +12,8 @@
 - [ ] Print to PDF
 - [ ] Role authorization
 - [ ] Pagination
-- [ ] Variable page size
-- [ ] Jump to top left corner after page switch
+- [x] Variable page size
+- [x] Jump to top left corner after page switch
 - [ ] Back button
 - [ ] Refine menu button focus and mouse pressed style
 - [ ] Check dependency before delete

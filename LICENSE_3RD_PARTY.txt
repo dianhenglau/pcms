@@ -1,0 +1,37 @@
+--------------------------------------------------------------------------------
+Gradle
+https://gradle.org
+Apache License Version 2.0
+http://www.apache.org/licenses/LICENSE-2.0
+
+--------------------------------------------------------------------------------
+Checkstyle
+https://checkstyle.sourceforge.io
+GNU Lesser General Public License Version 2.1
+https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html
+
+--------------------------------------------------------------------------------
+SpotBugs
+https://spotbugs.github.io
+GNU Lesser General Public License Version 2.1
+https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html
+
+--------------------------------------------------------------------------------
+PMD
+Copyright (c) 2003-2009, InfoEther, LLC
+https://pmd.github.io
+PMD's BSD-Style License
+https://github.com/pmd/pmd/blob/master/LICENSE
+
+--------------------------------------------------------------------------------
+JUnit 5
+https://junit.org/junit5/
+Eclipse Public License Version 2.0
+https://github.com/junit-team/junit5/blob/master/LICENSE.md
+
+--------------------------------------------------------------------------------
+Mockito
+Copyright (c) 2007 Mockito contributors
+https://site.mockito.org
+The MIT License
+https://github.com/mockito/mockito/blob/release/3.x/LICENSE

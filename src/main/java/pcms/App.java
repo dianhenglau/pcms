@@ -2,6 +2,12 @@ package pcms;
 
 import java.nio.file.Path;
 import javax.swing.SwingUtilities;
+import pcms.category.AddCategoryView;
+import pcms.category.CategoryController;
+import pcms.category.CategoryInfoView;
+import pcms.category.CategoryListView;
+import pcms.category.CategoryRepository;
+import pcms.category.EditCategoryView;
 import pcms.login.LoginController;
 import pcms.login.LoginView;
 import pcms.loginrecord.LoginRecord;
@@ -28,19 +34,27 @@ public final class App {
     private final UserRepository userRepository;
     /** Login record repository. */
     private final LoginRecordRepository loginRecordRepository;
+    /** Category repository. */
+    private final CategoryRepository categoryRepository;
 
     /** Construct app. */
     public App() {
         // Enable anti-aliasing
         System.setProperty("awt.useSystemAAFontSettings","on");
         System.setProperty("swing.aatext", "true");
+
         // Create session.
         session = new Session();
+
         // Create models.
         userRepository = new UserRepository(getDataPath("users.csv"));
+
         loginRecordRepository = new LoginRecordRepository(
                 getDataPath("login_records.csv"), userRepository);
         LoginRecord.setUserRepository(userRepository);
+
+        categoryRepository = new CategoryRepository(getDataPath("categories.csv"));
+        
     }
 
     /** Run app. */
@@ -56,6 +70,11 @@ public final class App {
 
         final LoginRecordListView loginRecordListView = new LoginRecordListView();
 
+        final CategoryListView categoryListView = new CategoryListView();
+        final CategoryInfoView categoryInfoView = new CategoryInfoView();
+        final AddCategoryView addCategoryView = new AddCategoryView();
+        final EditCategoryView editCategoryView = new EditCategoryView();
+
         final MenuView menuView = new MenuView();
         final ContentView contentView = new ContentView(
                 userListView,
@@ -64,7 +83,11 @@ public final class App {
                 editUserView,
                 profileView,
                 editProfileView,
-                loginRecordListView);
+                loginRecordListView,
+                categoryListView,
+                categoryInfoView,
+                addCategoryView,
+                editCategoryView);
 
         final MainView mainView = new MainView(menuView, contentView);
         final LoginView loginView = new LoginView();
@@ -91,6 +114,14 @@ public final class App {
                 loginRecordRepository,
                 loginRecordListView,
                 rootView);
+        final CategoryController categoryController = new CategoryController(
+                session,
+                categoryRepository,
+                categoryListView,
+                categoryInfoView,
+                addCategoryView,
+                editCategoryView,
+                rootView);
 
         final MenuController menuController = new MenuController(
                 session,
@@ -107,12 +138,14 @@ public final class App {
         userController.init();
         profileController.init();
         loginRecordController.init();
+        categoryController.init();
 
         menuController.init(
                 loginController,
                 userController,
                 profileController,
-                loginRecordController);
+                loginRecordController,
+                categoryController);
 
         loginController.init(userController);
 

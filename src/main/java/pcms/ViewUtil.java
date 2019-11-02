@@ -11,6 +11,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /** Utilities for views. */
@@ -111,7 +113,10 @@ public final class ViewUtil {
         final Font f = keyLbl.getFont();
         keyLbl.setFont(f.deriveFont(f.getStyle() & ~Font.BOLD));
         keyLbl.setMaximumSize(new Dimension(130, keyLbl.getPreferredSize().height));
+        keyLbl.setAlignmentY(JLabel.TOP_ALIGNMENT);
         keyLbl.setHorizontalAlignment(JLabel.RIGHT);
+
+        value.setAlignmentY(JLabel.TOP_ALIGNMENT);
 
         pane.add(keyLbl);
         pane.add(Box.createRigidArea(new Dimension(20, 0)));
@@ -172,12 +177,58 @@ public final class ViewUtil {
         return tf;
     }
 
+    /** Create text area. */
+    public static JTextArea createTextArea() {
+        final JTextArea ta = new JTextArea();
+        ta.setMaximumSize(ta.getPreferredSize());
+        ta.setBorder(BorderFactory.createEmptyBorder(3, 7, 3, 7));
+        ta.setLineWrap(true);
+        ta.setWrapStyleWord(true);
+        return ta;
+    }
+
+    /** Create text area. */
+    public static JTextArea createViewOnlyTextArea() {
+        final JTextArea ta = new JTextArea() {
+            /** Get maximum size. */
+            @Override
+            public Dimension getMaximumSize() {
+                final Dimension d = super.getMaximumSize();
+                d.height = getPreferredSize().height;
+                return d;
+            }
+        };
+        ta.setMaximumSize(new Dimension(450, 0));
+        ta.setEditable(false);
+        ta.setLineWrap(true);
+        ta.setWrapStyleWord(true);
+        ta.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        ta.setBackground(new Color(0f, 0f, 0f, 0f));
+        return ta;
+    }
+
     /** Create centered input label. */
     public static JLabel createCenteredInputLabel(final String s) {
         final JLabel lbl = new JLabel(s);
         lbl.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         lbl.setMaximumSize(new Dimension(200, lbl.getMaximumSize().height));
         return lbl;
+    }
+
+    /** Create scroll pane. */
+    public static JScrollPane createScrollPane(final JComponent component) {
+        final JScrollPane scrollPane = new JScrollPane(component);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        return scrollPane;
+    }
+
+    /** Create scroll pane with width and height. */
+    public static JScrollPane createScrollPane(
+            final JComponent component, final int width, final int height) {
+        final JScrollPane scrollPane = createScrollPane(component);
+        scrollPane.setMaximumSize(new Dimension(width, height));
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(0.6f, 0.6f, 0.6f)));
+        return scrollPane;
     }
 
     /** Style centered input. */

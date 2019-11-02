@@ -2,6 +2,7 @@ package pcms.menu;
 
 import pcms.RootView;
 import pcms.Session;
+import pcms.category.CategoryController;
 import pcms.login.LoginController;
 import pcms.loginrecord.LoginRecordController;
 import pcms.profile.ProfileController;
@@ -33,12 +34,14 @@ public final class MenuController {
             final LoginController loginController,
             final UserController userController,
             final ProfileController profileController,
-            final LoginRecordController loginRecordController) {
+            final LoginRecordController loginRecordController,
+            final CategoryController categoryController) {
 
         menuView.userBtn.addActionListener(e -> userController.index(""));
         menuView.logoutBtn.addActionListener(e -> loginController.logout());
         menuView.profileBtn.addActionListener(e -> profileController.index());
         menuView.loginRecordBtn.addActionListener(e -> loginRecordController.index(""));
+        menuView.categoryBtn.addActionListener(e -> categoryController.index(""));
     }
 }
 

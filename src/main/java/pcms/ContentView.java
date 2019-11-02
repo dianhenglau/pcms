@@ -2,6 +2,10 @@ package pcms;
 
 import java.awt.CardLayout;
 import javax.swing.JPanel;
+import pcms.category.AddCategoryView;
+import pcms.category.CategoryInfoView;
+import pcms.category.CategoryListView;
+import pcms.category.EditCategoryView;
 import pcms.loginrecord.LoginRecordListView;
 import pcms.profile.EditProfileView;
 import pcms.profile.ProfileView;
@@ -16,7 +20,8 @@ public final class ContentView {
     public enum Views {
         USER_LIST, USER_INFO, ADD_USER, EDIT_USER, 
         PROFILE, EDIT_PROFILE,
-        LOGIN_RECORD_LIST
+        LOGIN_RECORD_LIST,
+        CATEGORY_LIST, CATEGORY_INFO, ADD_CATEGORY, EDIT_CATEGORY
     }
 
     /** User list view. */
@@ -36,20 +41,33 @@ public final class ContentView {
     /** Login record list view. */
     public final LoginRecordListView loginRecordListView;
 
+    /** Category list view. */
+    public final CategoryListView categoryListView;
+    /** Category info view. */
+    public final CategoryInfoView categoryInfoView;
+    /** Add category view. */
+    public final AddCategoryView addCategoryView;
+    /** Edit category view. */
+    public final EditCategoryView editCategoryView;
+
     /** Pane. */
     public final JPanel pane;
     /** Card layout. */
     private final CardLayout cardLayout;
 
     /** Construct. */
-    public ContentView(
+    public ContentView(// NOPMD - Ok to have long parameter list
             final UserListView userListView,
             final UserInfoView userInfoView,
             final AddUserView addUserView,
             final EditUserView editUserView,
             final ProfileView profileView,
             final EditProfileView editProfileView,
-            final LoginRecordListView loginRecordListView) {
+            final LoginRecordListView loginRecordListView,
+            final CategoryListView categoryListView,
+            final CategoryInfoView categoryInfoView,
+            final AddCategoryView addCategoryView,
+            final EditCategoryView editCategoryView) {
 
         this.userListView = userListView;
         this.userInfoView = userInfoView;
@@ -58,6 +76,10 @@ public final class ContentView {
         this.profileView = profileView;
         this.editProfileView = editProfileView;
         this.loginRecordListView = loginRecordListView;
+        this.categoryListView = categoryListView;
+        this.categoryInfoView = categoryInfoView;
+        this.addCategoryView = addCategoryView;
+        this.editCategoryView = editCategoryView;
 
         cardLayout = new CardLayout();
         pane = new JPanel(cardLayout);
@@ -69,6 +91,10 @@ public final class ContentView {
         pane.add(profileView.pane, Views.PROFILE.name());
         pane.add(editProfileView.pane, Views.EDIT_PROFILE.name());
         pane.add(loginRecordListView.pane, Views.LOGIN_RECORD_LIST.name());
+        pane.add(categoryListView.pane, Views.CATEGORY_LIST.name());
+        pane.add(categoryInfoView.pane, Views.CATEGORY_INFO.name());
+        pane.add(addCategoryView.pane, Views.ADD_CATEGORY.name());
+        pane.add(editCategoryView.pane, Views.EDIT_CATEGORY.name());
     }
 
     /** Show a view with given key. */

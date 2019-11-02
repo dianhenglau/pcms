@@ -13,12 +13,12 @@ Model-View-Controller
 
 4. All view's public method should be `render`.
 
+5. In controller, `store()`, `update()`, and `destroy()` should not call `render()` directly. They should call `index()`, `create()`, `show()`, `edit()`.
+
 
 # Directory Structure
 
 1. Feature-based instead of type-based.
-
-2. [Discussion needed] A class is placed under `common` package if and only if it does not depend on other class in this project.
 
 
 # View Composition Hierarchy

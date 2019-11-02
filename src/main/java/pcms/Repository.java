@@ -118,7 +118,8 @@ public abstract class Repository<T extends Model> {
                 cache.add(recordParser.apply(rows.get(i)));
             }
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            System.out.println(String.format(
+                    "Cannot find file: %s, will create it when record is added.", ex.getMessage()));
         }
     }
 

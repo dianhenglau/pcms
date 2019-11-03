@@ -55,6 +55,9 @@ class CategoryTest {
         assertEquals("C00013", category.getId());
         assertEquals("Furniture", category.getName());
         assertEquals(desc, category.getDescription());
+
+        assertEquals("Fields count incorrect.", assertThrows(IllegalArgumentException.class, () -> {
+            new Category(",,,"); }).getMessage());
     }
 
     /** Test to row. */

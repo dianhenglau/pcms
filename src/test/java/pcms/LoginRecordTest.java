@@ -66,6 +66,11 @@ class LoginRecordTest {
         assertEquals("U00007", loginRecord.getUserId());
         assertEquals(LoginRecord.Action.LOGOUT, loginRecord.getAction());
         assertEquals(Instant.ofEpochSecond(1_572_361_855), loginRecord.getTimestamp());
+
+        assertEquals("Fields count incorrect.", assertThrows(IllegalArgumentException.class, () -> {
+            new LoginRecord(",,"); }).getMessage());
+        assertTrue(assertThrows(IllegalArgumentException.class, () -> {
+            new LoginRecord(",,LOGUP,"); }).getMessage().startsWith("No enum constant"));
     }
 
     /** Test to row. */

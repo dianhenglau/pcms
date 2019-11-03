@@ -125,6 +125,13 @@ class UserTest {
         assertEquals("sam", user.getUsername());
         assertEquals("sam123", user.getPassword());
         assertTrue(user.isActive());
+
+        assertEquals("Fields count incorrect.", assertThrows(IllegalArgumentException.class, () -> {
+            new User(",,,,,,"); }).getMessage());
+        assertEquals("Role invalid.", assertThrows(IllegalArgumentException.class, () -> {
+            new User(",,,,[What],,,"); }).getMessage());
+        assertEquals("Status invalid.", assertThrows(IllegalArgumentException.class, () -> {
+            new User(",,,,,,,Bahaha"); }).getMessage());
     }
 
     /** Test to row. */

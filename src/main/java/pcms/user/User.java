@@ -59,6 +59,9 @@ public final class User implements Model {
 
             throw new IllegalArgumentException("Role invalid.");
         }
+        if (!fields.get(7).equals("Active") && !fields.get(7).equals("Inactive")) {
+            throw new IllegalArgumentException("Status invalid.");
+        }
 
         id = fields.get(0);
         fullName = decode(fields.get(1));

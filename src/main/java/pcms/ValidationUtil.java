@@ -67,6 +67,24 @@ public final class ValidationUtil {
         return x;
     }
 
+    /** Make sure x has email format. */
+    public static String validEmailFormat(final String label, final String x) {
+        if (!x.matches(".+@.+\\..+")) {
+            throw new InvalidFieldException(label, String.join("", capitalize(label),
+                    " should have at least one '@' and '.' character."));
+        }
+        return x;
+    }
+
+    /** Make sure x has phone format. */
+    public static String validPhoneFormat(final String label, final String x) {
+        if (!x.matches("\\+?[0-9]{8,15}")) {
+            throw new InvalidFieldException(label, String.join("", capitalize(label),
+                    " should be 8 to 15 digits."));
+        }
+        return x;
+    }
+
     /** Make sure x does not exists in cache. */
     public static <T, U> U notExists(
             final String label, 

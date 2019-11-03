@@ -165,7 +165,7 @@ class ValidationUtilTest {
 
     /** Test validUsernameFormat. */
     @Test
-    public void testHasUsernameFormat() {
+    public void testValidUsernameFormat() {
         ValidationUtil.validUsernameFormat("yay", "jolin_tsai");
         ValidationUtil.validUsernameFormat("yah", "jay79chou");
         ValidationUtil.validUsernameFormat("yao", "janice1988");
@@ -187,6 +187,46 @@ class ValidationUtilTest {
         });
         assertThrows(InvalidFieldException.class, () -> {
             ValidationUtil.validUsernameFormat("yiq", "^_^");
+        });
+    }
+
+    /** Test validEmailFormat. */
+    @Test
+    public void testValidEmailFormat() {
+        ValidationUtil.validEmailFormat("ray", "hello@example.com");
+        ValidationUtil.validEmailFormat("rah", "wow@apu.edu.my");
+        ValidationUtil.validEmailFormat("rah", "haha.hehe_what@apu.edu.my");
+        assertThrows(InvalidFieldException.class, () -> {
+            ValidationUtil.validEmailFormat("riy", "wow@apu");
+        });
+        assertThrows(InvalidFieldException.class, () -> {
+            ValidationUtil.validEmailFormat("rip", "123");
+        });
+        assertThrows(InvalidFieldException.class, () -> {
+            ValidationUtil.validEmailFormat("rih", "haha.wow@apu");
+        });
+        assertThrows(InvalidFieldException.class, () -> {
+            ValidationUtil.validEmailFormat("rit", "google.com");
+        });
+    }
+
+    /** Test validPhoneFormat. */
+    @Test
+    public void testValidPhoneFormat() {
+        ValidationUtil.validPhoneFormat("kay", "+60123456789");
+        ValidationUtil.validPhoneFormat("kah", "12345678");
+        ValidationUtil.validPhoneFormat("kah", "123456789012345");
+        assertThrows(InvalidFieldException.class, () -> {
+            ValidationUtil.validPhoneFormat("kiy", "1234567");
+        });
+        assertThrows(InvalidFieldException.class, () -> {
+            ValidationUtil.validPhoneFormat("kip", "1234567890123456");
+        });
+        assertThrows(InvalidFieldException.class, () -> {
+            ValidationUtil.validPhoneFormat("kih", "-12345678");
+        });
+        assertThrows(InvalidFieldException.class, () -> {
+            ValidationUtil.validPhoneFormat("kit", "1234S678");
         });
     }
 

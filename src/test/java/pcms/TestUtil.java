@@ -13,4 +13,41 @@ final class TestUtil {
     public static Path getDataPath(final String filename) {
         return Path.of("data", "test", filename);
     }
+
+    /** Minimum length error message. */
+    public static String minLenErrMsg(final String label, final int min) {
+        return String.format("%s length should be at least %d.", label, min);
+    }
+
+    /** Duplicate error message. */
+    public static String duplicateErrMsg(final String label) {
+        return String.format("%s has been used. Choose another one.", label);
+    }
+
+    /** Key not found error message. */
+    public static String keyNotFoundErrMsg(final String label) {
+        return String.format("%s does not exist in database.", label);
+    }
+
+    /** Required error message. */
+    public static String requiredErrMsg(final String label) {
+        return String.format("%s is required.", label);
+    }
+
+    /** Username format error message. */
+    public static String usernameFmtErrMsg(final String label) {
+        return String.format("%s should start with alphabet, and can contain alphabets and "
+                + "numbers only.", label);
+    }
+
+    /** Email format error message. */
+    public static String emailFmtErrMsg(final String label) {
+        return String.format("%s should have at least one '@' and '.' character.", label);
+    }
+
+    /** Phone format error message. */
+    public static String phoneFmtErrMsg(final String label) {
+        return String.format("%s should be 8 to 15 digits.", label);
+    }
+
 }

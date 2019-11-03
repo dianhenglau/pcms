@@ -27,13 +27,6 @@ class CategoryRepositoryTest {
     private static final String ROW5 = "C00005,Houseware,\"Small household items such as kitchen utensils, tableware, and decorative objects.\"";
     /** categories.csv content. */
     private static final String CONTENT = String.join("\n", "6", ROW1, ROW2, ROW3, ROW4, ROW5, "");
-
-    /** InvalidFieldException message for validMinLength. */
-    private static final String MSG1 = " length should be at least 1.";
-    /** InvalidFieldException message for notExists. */
-    private static final String MSG3 = " has been used. Choose another one.";
-    /** InvalidFieldException message for primary key not found. */
-    private static final String MSG4 = " does not exist in database.";
     // CHECKSTYLE:ON
 
     /** Test constructor. */
@@ -57,27 +50,29 @@ class CategoryRepositoryTest {
 
             // Start testing.
             final CategoryRepository categoryRepository = new CategoryRepository(filePath);
-            final Category.Builder builder = new Category.Builder()
+            final Category newCategory = new Category.Builder()
                     .withName("Grocery")
-                    .withDescription("Food and items that you buy in a food store or supermarket.");
+                    .withDescription("Food and items that you buy in a food store or supermarket.")
+                    .build();
 
-            Category newCategory = builder.build();
-            newCategory = categoryRepository.insert(newCategory);
+            final Category result = categoryRepository.insert(newCategory);
             assertEquals(
-                    String.join("", "7\n", CONTENT.substring(2), newCategory.toRow(), "\n"),
+                    String.join("", "7\n", CONTENT.substring(2), result.toRow(), "\n"),
                     Files.readString(filePath, StandardCharsets.UTF_8));
 
             InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
-                categoryRepository.insert(builder.withName("").build());
+                categoryRepository.insert(
+                        new Category.Builder(newCategory).withName("").build());
             });
             assertEquals("name", ex.getLabel()); // NOPMD
-            assertEquals("Name" + MSG1, ex.getMessage()); // NOPMD
+            assertEquals(TestUtil.minLenErrMsg("Name", 1), ex.getMessage()); // NOPMD
 
             ex = assertThrows(InvalidFieldException.class, () -> { // Duplicate name
-                categoryRepository.insert(builder.withName("Clothing").build());
+                categoryRepository.insert(
+                        new Category.Builder(newCategory).withName("Clothing").build());
             });
             assertEquals("name", ex.getLabel());
-            assertEquals("Name" + MSG3, ex.getMessage());
+            assertEquals(TestUtil.duplicateErrMsg("Name"), ex.getMessage());
         } catch (IOException ex) {
             fail(ex);
         }
@@ -95,8 +90,9 @@ class CategoryRepositoryTest {
             // Start testing.
             final CategoryRepository categoryRepository = new CategoryRepository(filePath);
             final Category category = categoryRepository.findWithId("C00004").get();
-            final Category.Builder builder = new Category.Builder(category).withName("Stationery");
-            final Category newCategory = builder.build();
+            final Category newCategory = new Category.Builder(category)
+                    .withName("Stationery")
+                    .build();
 
             categoryRepository.update(newCategory);
             assertEquals(
@@ -104,22 +100,25 @@ class CategoryRepositoryTest {
                     Files.readString(filePath, StandardCharsets.UTF_8));
 
             InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
-                categoryRepository.delete(new Category.Builder().withId("C00007").build());
+                categoryRepository.delete(
+                        new Category.Builder().withId("C00007").build());
             });
             assertEquals("id", ex.getLabel());
-            assertEquals("ID" + MSG4, ex.getMessage());
+            assertEquals(TestUtil.keyNotFoundErrMsg("ID"), ex.getMessage());
 
             ex = assertThrows(InvalidFieldException.class, () -> {
-                categoryRepository.update(builder.withName("").build());
+                categoryRepository.update(
+                        new Category.Builder(newCategory).withName("").build());
             });
             assertEquals("name", ex.getLabel());
-            assertEquals("Name" + MSG1, ex.getMessage());
+            assertEquals(TestUtil.minLenErrMsg("Name", 1), ex.getMessage());
 
             ex = assertThrows(InvalidFieldException.class, () -> { // Duplicate name
-                categoryRepository.update(builder.withName("Houseware").build());
+                categoryRepository.update(
+                        new Category.Builder(newCategory).withName("Houseware").build());
             });
             assertEquals("name", ex.getLabel());
-            assertEquals("Name" + MSG3, ex.getMessage());
+            assertEquals(TestUtil.duplicateErrMsg("Name"), ex.getMessage());
         } catch (IOException ex) {
             fail(ex);
         }

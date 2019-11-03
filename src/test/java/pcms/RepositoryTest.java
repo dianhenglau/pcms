@@ -27,9 +27,6 @@ class RepositoryTest {
     /** cars.csv content. */
     private static final String CONTENT = String.join("\n", "6", ROW1, ROW2, ROW3, ROW4, ROW5, "");
 
-    /** InvalidFieldException message for primary key not found. */
-    private static final String MSG4 = " does not exist in database.";
-
     /** Dummy class. */
     private static final class Car implements Model {
         /** ID. */
@@ -278,7 +275,7 @@ class RepositoryTest {
                 cars.delete(new Car.Builder().withId("C00008").build());
             });
             assertEquals("id", ex.getLabel());
-            assertEquals("ID" + MSG4, ex.getMessage());
+            assertEquals(TestUtil.keyNotFoundErrMsg("ID"), ex.getMessage());
         } catch (IOException ex) {
             fail(ex);
         }

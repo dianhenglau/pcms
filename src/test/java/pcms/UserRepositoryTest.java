@@ -27,15 +27,6 @@ class UserRepositoryTest {
     private static final String ROW5 = "U00005,Jake Lindsey,\"9 Broad Street, Pompano Beach, FL 33060\",jake@example.com,[Product Manager],jake,jake123,Active";
     /** users.csv content. */
     private static final String CONTENT = String.join("\n", "6", ROW1, ROW2, ROW3, ROW4, ROW5, "");
-
-    /** InvalidFieldException message for validMinLength. */
-    private static final String MSG1 = " length should be at least 1.";
-    /** InvalidFieldException message for validUsernameFormat. */
-    private static final String MSG2 = " should start with alphabet, and can contain alphabets and numbers only.";
-    /** InvalidFieldException message for notExists. */
-    private static final String MSG3 = " has been used. Choose another one.";
-    /** InvalidFieldException message for primary key not found. */
-    private static final String MSG4 = " does not exist in database.";
     // CHECKSTYLE:ON
 
     /** Test constructor. */
@@ -59,7 +50,7 @@ class UserRepositoryTest {
 
             // Start testing.
             final UserRepository userRepository = new UserRepository(filePath);
-            final User.Builder builder = new User.Builder()
+            final User newUser = new User.Builder()
                     .withFullName("Kristina Clarke")
                     .withAddress("17 Penn Street, Drexel Hill, PA 19026")
                     .withEmail("kristina@example.com")
@@ -67,49 +58,69 @@ class UserRepositoryTest {
                     .withIsProductManager(true)
                     .withUsername("kristina")
                     .withPassword("kristina123")
-                    .withIsActive(true);
+                    .withIsActive(true)
+                    .build();
 
-            User newUser = builder.build();
-            newUser = userRepository.insert(newUser);
+            final User result = userRepository.insert(newUser);
             assertEquals(
-                    String.join("", "7\n", CONTENT.substring(2), newUser.toRow(), "\n"),
+                    String.join("", "7\n", CONTENT.substring(2), result.toRow(), "\n"),
                     Files.readString(filePath, StandardCharsets.UTF_8));
 
             InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
-                userRepository.insert(builder.withUsername("").build());
+                userRepository.insert(
+                        new User.Builder(newUser).withUsername("").build());
             });
             assertEquals("username", ex.getLabel()); // NOPMD
-            assertEquals("Username" + MSG1, ex.getMessage()); // NOPMD
+            assertEquals(TestUtil.minLenErrMsg("Username", 1), ex.getMessage()); // NOPMD
 
             ex = assertThrows(InvalidFieldException.class, () -> {
-                userRepository.insert(builder.withUsername("name with space").build());
+                userRepository.insert(
+                        new User.Builder(newUser).withUsername("name with space").build());
             });
             assertEquals("username", ex.getLabel());
-            assertEquals("Username" + MSG2, ex.getMessage());
+            assertEquals(TestUtil.usernameFmtErrMsg("Username"), ex.getMessage());
 
             ex = assertThrows(InvalidFieldException.class, () -> {
-                userRepository.insert(builder.withUsername("5tart_with_number").build());
+                userRepository.insert(
+                        new User.Builder(newUser).withUsername("5tart_with_number").build());
             });
             assertEquals("username", ex.getLabel());
-            assertEquals("Username" + MSG2, ex.getMessage());
+            assertEquals(TestUtil.usernameFmtErrMsg("Username"), ex.getMessage());
 
             ex = assertThrows(InvalidFieldException.class, () -> {
-                userRepository.insert(builder.withUsername("contain_$ymbol").build());
+                userRepository.insert(
+                        new User.Builder(newUser).withUsername("contain_$ymbol").build());
             });
             assertEquals("username", ex.getLabel());
-            assertEquals("Username" + MSG2, ex.getMessage());
+            assertEquals(TestUtil.usernameFmtErrMsg("Username"), ex.getMessage());
 
             ex = assertThrows(InvalidFieldException.class, () -> { // Duplicate username
-                userRepository.insert(builder.withUsername("kristina").build());
+                userRepository.insert(
+                        new User.Builder(newUser).withUsername("kristina").build());
             });
             assertEquals("username", ex.getLabel());
-            assertEquals("Username" + MSG3, ex.getMessage());
+            assertEquals(TestUtil.duplicateErrMsg("Username"), ex.getMessage());
 
             ex = assertThrows(InvalidFieldException.class, () -> {
-                userRepository.insert(builder.withUsername("isabelle").withPassword("").build());
+                userRepository.insert(
+                        new User.Builder(newUser).withUsername("abc").withPassword("").build());
             });
             assertEquals("password", ex.getLabel());
-            assertEquals("Password" + MSG1, ex.getMessage());
+            assertEquals(TestUtil.minLenErrMsg("Password", 1), ex.getMessage());
+
+            ex = assertThrows(InvalidFieldException.class, () -> {
+                userRepository.insert(
+                        new User.Builder(newUser).withUsername("abc").withEmail("").build());
+            });
+            assertEquals("email", ex.getLabel()); // NOPMD
+            assertEquals(TestUtil.requiredErrMsg("Email"), ex.getMessage()); // NOPMD
+
+            ex = assertThrows(InvalidFieldException.class, () -> {
+                userRepository.insert(
+                        new User.Builder(newUser).withUsername("abc").withEmail("abcdef").build());
+            });
+            assertEquals("email", ex.getLabel());
+            assertEquals(TestUtil.emailFmtErrMsg("Email"), ex.getMessage());
         } catch (IOException ex) {
             fail(ex);
         }
@@ -127,8 +138,7 @@ class UserRepositoryTest {
             // Start testing.
             final UserRepository userRepository = new UserRepository(filePath);
             final User user = userRepository.findWithId("U00004").get();
-            final User.Builder builder = new User.Builder(user).withPassword("louisa456");
-            final User newUser = builder.build();
+            final User newUser = new User.Builder(user).withPassword("louisa456").build();
 
             userRepository.update(newUser);
             assertEquals(
@@ -136,46 +146,65 @@ class UserRepositoryTest {
                     Files.readString(filePath, StandardCharsets.UTF_8));
 
             InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
-                userRepository.delete(new User.Builder().withId("U00007").build());
+                userRepository.update(new User.Builder().withId("U00007").build());
             });
             assertEquals("id", ex.getLabel());
-            assertEquals("ID" + MSG4, ex.getMessage());
+            assertEquals(TestUtil.keyNotFoundErrMsg("ID"), ex.getMessage());
 
             ex = assertThrows(InvalidFieldException.class, () -> {
-                userRepository.update(builder.withUsername("").build());
+                userRepository.update(new User.Builder(newUser).withUsername("").build());
             });
             assertEquals("username", ex.getLabel());
-            assertEquals("Username" + MSG1, ex.getMessage());
+            assertEquals(TestUtil.minLenErrMsg("Username", 1), ex.getMessage());
 
             ex = assertThrows(InvalidFieldException.class, () -> {
-                userRepository.update(builder.withUsername("name with space").build());
+                userRepository.update(
+                        new User.Builder(newUser).withUsername("name with space").build());
             });
             assertEquals("username", ex.getLabel());
-            assertEquals("Username" + MSG2, ex.getMessage());
+            assertEquals(TestUtil.usernameFmtErrMsg("Username"), ex.getMessage());
 
             ex = assertThrows(InvalidFieldException.class, () -> {
-                userRepository.update(builder.withUsername("5tart_with_number").build());
+                userRepository.update(
+                        new User.Builder(newUser).withUsername("5tart_with_number").build());
             });
             assertEquals("username", ex.getLabel());
-            assertEquals("Username" + MSG2, ex.getMessage());
+            assertEquals(TestUtil.usernameFmtErrMsg("Username"), ex.getMessage());
 
             ex = assertThrows(InvalidFieldException.class, () -> {
-                userRepository.update(builder.withUsername("contain_$ymbol").build());
+                userRepository.update(
+                        new User.Builder(newUser).withUsername("contain_$ymbol").build());
             });
             assertEquals("username", ex.getLabel());
-            assertEquals("Username" + MSG2, ex.getMessage());
+            assertEquals(TestUtil.usernameFmtErrMsg("Username"), ex.getMessage());
 
             ex = assertThrows(InvalidFieldException.class, () -> { // Duplicate username
-                userRepository.update(builder.withUsername("jamal").build());
+                userRepository.update(
+                        new User.Builder(newUser).withUsername("jamal").build());
             });
             assertEquals("username", ex.getLabel());
-            assertEquals("Username" + MSG3, ex.getMessage());
+            assertEquals(TestUtil.duplicateErrMsg("Username"), ex.getMessage());
 
             ex = assertThrows(InvalidFieldException.class, () -> {
-                userRepository.update(builder.withUsername("louisa").withPassword("").build());
+                userRepository.update(
+                        new User.Builder(newUser).withPassword("").build());
             });
             assertEquals("password", ex.getLabel());
-            assertEquals("Password" + MSG1, ex.getMessage());
+            assertEquals(TestUtil.minLenErrMsg("Password", 1), ex.getMessage());
+
+            ex = assertThrows(InvalidFieldException.class, () -> {
+                userRepository.insert(
+                        new User.Builder(newUser).withEmail("").build());
+            });
+            assertEquals("email", ex.getLabel());
+            assertEquals(TestUtil.requiredErrMsg("Email"), ex.getMessage());
+
+            ex = assertThrows(InvalidFieldException.class, () -> {
+                userRepository.insert(
+                        new User.Builder(newUser).withEmail("abcdef").build());
+            });
+            assertEquals("email", ex.getLabel());
+            assertEquals(TestUtil.emailFmtErrMsg("Email"), ex.getMessage());
         } catch (IOException ex) {
             fail(ex);
         }

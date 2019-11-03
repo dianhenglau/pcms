@@ -64,20 +64,21 @@ class LoginRecordRepositoryTest {
             // Start testing.
             final LoginRecordRepository loginRecordRepository = new LoginRecordRepository(
                     filePath, userRepository);
-            final LoginRecord.Builder builder = new LoginRecord.Builder()
+            final LoginRecord newLoginRecord = new LoginRecord.Builder()
                     .withUserId("U00003")
-                    .withAction(LoginRecord.Action.LOGOUT);
+                    .withAction(LoginRecord.Action.LOGOUT)
+                    .build();
 
-            LoginRecord newLoginRecord = builder.build();
-            newLoginRecord = loginRecordRepository.insert(newLoginRecord);
+            final LoginRecord result = loginRecordRepository.insert(newLoginRecord);
             verify(userRepository).findWithId("U00003");
 
             assertEquals(
-                    String.join("", "7\n", CONTENT.substring(2), newLoginRecord.toRow(), "\n"),
+                    String.join("", "7\n", CONTENT.substring(2), result.toRow(), "\n"),
                     Files.readString(filePath, StandardCharsets.UTF_8));
 
             final InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
-                loginRecordRepository.insert(builder.withUserId("U00008").build());
+                loginRecordRepository.insert(
+                        new LoginRecord.Builder(newLoginRecord).withUserId("U00008").build());
             });
             assertEquals("id", ex.getLabel());
             assertEquals("Record with ID U00008 not found.", ex.getMessage());
@@ -102,15 +103,15 @@ class LoginRecordRepositoryTest {
             final LoginRecordRepository loginRecordRepository 
                     = new LoginRecordRepository(filePath, userRepository);
 
-            LoginRecord newLoginRecord = new LoginRecord.Builder()
+            final LoginRecord newLoginRecord = new LoginRecord.Builder()
                     .withUserId("U00001")
                     .withAction(LoginRecord.Action.LOGIN)
                     .build();
-            newLoginRecord = loginRecordRepository.insert(newLoginRecord);
+            final LoginRecord result = loginRecordRepository.insert(newLoginRecord);
 
             verify(userRepository).findWithId("U00001");
             assertEquals(
-                    String.join("\n", "2", newLoginRecord.toRow(), ""),
+                    String.join("\n", "2", result.toRow(), ""),
                     Files.readString(filePath, StandardCharsets.UTF_8));
         } catch (IOException ex) {
             fail(ex);

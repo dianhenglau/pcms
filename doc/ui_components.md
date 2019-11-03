@@ -131,7 +131,7 @@ Administrator only.
     - Name
     - Quantity
     - Retail price
-    - Discount
+    - Current discount
     - Supplier
     - View button
 
@@ -214,7 +214,7 @@ Administrator only.
     - Category
     - Quantity
     - Retail price
-    - Discount
+    - Current discount
     - Supplier
     - View button
     - Delete button
@@ -229,7 +229,7 @@ Administrator only.
 - Quantity
 - Description
 - Retail price
-- Discount
+- Current discount
 - Supplier info
 
 - Edit button
@@ -244,7 +244,7 @@ Administrator only.
 - Quantity input
 - Description text area
 - Retail price input
-- Discount input
+- Current discount input
 - Supplier select
 
 - Add button
@@ -260,7 +260,7 @@ Administrator only.
 - Quantity input
 - Description text area
 - Retail price input
-- Discount input
+- Current discount input
 - Supplier select
 
 - Save button
@@ -304,7 +304,8 @@ Product manager only.
     - Name
     - Quantity
     - Retail price
-    - Discount
+    - Current discount
+    - Special discount
     - Supplier
     - View button
 
@@ -330,7 +331,8 @@ Product manager only.
     - Name
     - Quantity
     - Retail price
-    - Discount
+    - Current discount
+    - Special discount input
     - Supplier
     - Remove button
 
@@ -359,7 +361,8 @@ Product manager only.
     - Name
     - Quantity
     - Retail price
-    - Discount
+    - Current discount
+    - Special discount input
     - Supplier
     - Remove button
 

@@ -34,7 +34,7 @@
 - Quantity
 - Description
 - Retail price
-- Discount
+- Current discount
 - Supplier ID (FK)
 
 # Catalog
@@ -45,7 +45,7 @@
 - Description
 - Season start date
 - Season end date
-- Product IDs (FK list)
+- Product ID - Discount pairs (list of pairs containing FK)
 - Created on
 - Created by (FK)
 

@@ -1,4 +1,4 @@
-package pcms;
+package pcms; // NOPMD - Ok to have high number of imports
 
 import java.nio.file.Path;
 import javax.swing.SwingUtilities;
@@ -19,6 +19,12 @@ import pcms.menu.MenuView;
 import pcms.profile.EditProfileView;
 import pcms.profile.ProfileController;
 import pcms.profile.ProfileView;
+import pcms.supplier.AddSupplierView;
+import pcms.supplier.EditSupplierView;
+import pcms.supplier.SupplierController;
+import pcms.supplier.SupplierInfoView;
+import pcms.supplier.SupplierListView;
+import pcms.supplier.SupplierRepository;
 import pcms.user.AddUserView;
 import pcms.user.EditUserView;
 import pcms.user.UserController;
@@ -36,6 +42,8 @@ public final class App {
     private final LoginRecordRepository loginRecordRepository;
     /** Category repository. */
     private final CategoryRepository categoryRepository;
+    /** Supplier repository. */
+    private final SupplierRepository supplierRepository;
 
     /** Construct app. */
     public App() {
@@ -55,10 +63,11 @@ public final class App {
 
         categoryRepository = new CategoryRepository(getDataPath("categories.csv"));
         
+        supplierRepository = new SupplierRepository(getDataPath("suppliers.csv"));
     }
 
     /** Run app. */
-    public void createAndShowGui() {
+    public void createAndShowGui() { // NOPMD - Ok to have long methods
         // Create views.
         final UserListView userListView = new UserListView();
         final UserInfoView userInfoView = new UserInfoView();
@@ -75,6 +84,11 @@ public final class App {
         final AddCategoryView addCategoryView = new AddCategoryView();
         final EditCategoryView editCategoryView = new EditCategoryView();
 
+        final SupplierListView supplierListView = new SupplierListView();
+        final SupplierInfoView supplierInfoView = new SupplierInfoView();
+        final AddSupplierView addSupplierView = new AddSupplierView();
+        final EditSupplierView editSupplierView = new EditSupplierView();
+
         final MenuView menuView = new MenuView();
         final ContentView contentView = new ContentView(
                 userListView,
@@ -87,7 +101,11 @@ public final class App {
                 categoryListView,
                 categoryInfoView,
                 addCategoryView,
-                editCategoryView);
+                editCategoryView,
+                supplierListView,
+                supplierInfoView,
+                addSupplierView,
+                editSupplierView);
 
         final MainView mainView = new MainView(menuView, contentView);
         final LoginView loginView = new LoginView();
@@ -122,6 +140,14 @@ public final class App {
                 addCategoryView,
                 editCategoryView,
                 rootView);
+        final SupplierController supplierController = new SupplierController(
+                session,
+                supplierRepository,
+                supplierListView,
+                supplierInfoView,
+                addSupplierView,
+                editSupplierView,
+                rootView);
 
         final MenuController menuController = new MenuController(
                 session,
@@ -139,13 +165,15 @@ public final class App {
         profileController.init();
         loginRecordController.init();
         categoryController.init();
+        supplierController.init();
 
         menuController.init(
                 loginController,
                 userController,
                 profileController,
                 loginRecordController,
-                categoryController);
+                categoryController,
+                supplierController);
 
         loginController.init(userController);
 

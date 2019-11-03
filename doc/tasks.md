@@ -5,7 +5,7 @@
 - [x] User module
 - [x] Profile module
 - [x] Login record module
-- [ ] Supplier module
+- [x] Supplier module
 - [x] Category module
 - [ ] Product module
 - [ ] Catalog module
@@ -17,3 +17,4 @@
 - [ ] Back button
 - [ ] Refine menu button focus and mouse pressed style
 - [ ] Check dependency before delete
+- [ ] Show products in supplier info page

@@ -16,6 +16,10 @@ public final class UserRepository extends Repository<User> {
     public User insert(final User user) {
         readFromFile();
 
+        // Make sure email is valid.
+        ValidationUtil.notEmpty("email", user.getEmail()); // NOPMD - Ok to duplicate literal
+        ValidationUtil.validEmailFormat("email", user.getEmail());
+
         // Make sure username is valid.
         ValidationUtil.validMinLength("username", user.getUsername(), 1); // NOPMD
         ValidationUtil.validUsernameFormat("username", user.getUsername());
@@ -42,6 +46,10 @@ public final class UserRepository extends Repository<User> {
 
         // Make sure user id exists.
         final int index = ValidationUtil.idExists(cache, user);
+
+        // Make sure email is valid.
+        ValidationUtil.notEmpty("email", user.getEmail());
+        ValidationUtil.validEmailFormat("email", user.getEmail());
 
         // Make sure username is valid.
         ValidationUtil.validMinLength("username", user.getUsername(), 1);

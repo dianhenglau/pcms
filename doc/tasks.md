@@ -18,3 +18,4 @@
 - [ ] Refine menu button focus and mouse pressed style
 - [ ] Check dependency before delete
 - [ ] Show products in supplier info page
+- [ ] Filter login records by date

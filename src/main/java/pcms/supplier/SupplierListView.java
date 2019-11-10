@@ -43,7 +43,12 @@ public final class SupplierListView {
     }
 
     /** Render suppliers. */
-    public void render(final List<Supplier> suppliers, final ActionListener goView) {
+    public void render(
+            final List<Supplier> suppliers, 
+            final String search, 
+            final ActionListener goView) {
+
+        searchTf.setText(search);
         tablePane.removeAll();
         tablePane.add(headerRow);
         for (final Supplier u : suppliers) {

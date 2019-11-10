@@ -13,6 +13,8 @@ public final class CategoryInfoView {
     public final JPanel pane;
     /** Edit button. */
     public final JButton editBtn;
+    /** Back button. */
+    public final JButton backBtn;
     /** ID label. */
     private final JLabel idLbl;
     /** Name label. */
@@ -25,6 +27,7 @@ public final class CategoryInfoView {
         pane = ViewUtil.createContainerPane("Category Info");
 
         editBtn = new JButton("Edit");
+        backBtn = new JButton("Back");
         idLbl = new JLabel();
         nameLbl = new JLabel();
         descriptionTa = ViewUtil.createViewOnlyTextArea();
@@ -32,7 +35,7 @@ public final class CategoryInfoView {
         final String[] labels = {"ID", "Name", "Description"};
         final JComponent[] components = {idLbl, nameLbl, descriptionTa};
 
-        pane.add(ViewUtil.createButtonControlPane(editBtn));
+        pane.add(ViewUtil.createButtonControlPane(backBtn, editBtn));
         pane.add(ViewUtil.createKeyValuePane(labels, components));
     }
 

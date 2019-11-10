@@ -12,6 +12,8 @@ public final class UserInfoView {
     public final JPanel pane;
     /** Edit button. */
     public final JButton editBtn;
+    /** Back button. */
+    public final JButton backBtn;
     /** ID label. */
     private final JLabel idLbl;
     /** Full name label. */
@@ -36,6 +38,7 @@ public final class UserInfoView {
         pane = ViewUtil.createContainerPane("User Info");
 
         editBtn = new JButton("Edit");
+        backBtn = new JButton("Back");
         idLbl = new JLabel();
         fullNameLbl = new JLabel();
         addressLbl = new JLabel();
@@ -53,7 +56,7 @@ public final class UserInfoView {
                 idLbl, fullNameLbl, emailLbl, addressLbl, administratorLbl,
                 productManagerLbl, usernameLbl, passwordLbl, statusLbl};
 
-        pane.add(ViewUtil.createButtonControlPane(editBtn));
+        pane.add(ViewUtil.createButtonControlPane(backBtn, editBtn));
         pane.add(ViewUtil.createKeyValuePane(labels, components));
     }
 

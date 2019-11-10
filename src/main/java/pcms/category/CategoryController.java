@@ -49,6 +49,7 @@ public final class CategoryController {
         categoryListView.searchTf.addActionListener(e -> index(e.getActionCommand()));
         categoryListView.addBtn.addActionListener(e -> create());
         categoryInfoView.editBtn.addActionListener(e -> edit(e.getActionCommand()));
+        categoryInfoView.backBtn.addActionListener(e -> index(categoryListView.searchTf.getText()));
         addCategoryView.saveBtn.addActionListener(e -> store());
         addCategoryView.cancelBtn.addActionListener(e -> index(""));
         editCategoryView.saveBtn.addActionListener(e -> update(e.getActionCommand()));
@@ -65,6 +66,7 @@ public final class CategoryController {
         if (search.isEmpty()) {
             categoryListView.render(
                     categoryRepository.all(), 
+                    search,
                     e -> show(e.getActionCommand()),
                     e -> destroy(e.getActionCommand(), search));
         } else {
@@ -72,6 +74,7 @@ public final class CategoryController {
                     categoryRepository.filter(x ->
                         x.getId().toLowerCase(Locale.US).contains(lowerCase)
                         || x.getName().toLowerCase(Locale.US).contains(lowerCase)),
+                    search,
                     e -> show(e.getActionCommand()),
                     e -> destroy(e.getActionCommand(), search));
         }

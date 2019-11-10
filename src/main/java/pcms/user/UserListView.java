@@ -45,7 +45,8 @@ public final class UserListView {
     }
 
     /** Render users. */
-    public void render(final List<User> users, final ActionListener goView) {
+    public void render(final List<User> users, final String search, final ActionListener goView) {
+        searchTf.setText(search);
         tablePane.removeAll();
         tablePane.add(headerRow);
         for (final User u : users) {

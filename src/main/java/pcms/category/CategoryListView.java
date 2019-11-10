@@ -45,9 +45,11 @@ public final class CategoryListView {
     /** Render categorys. */
     public void render(
             final List<Category> categorys, 
+            final String search,
             final ActionListener goView,
             final ActionListener goDelete) {
 
+        searchTf.setText(search);
         tablePane.removeAll();
         tablePane.add(headerRow);
         for (final Category u : categorys) {

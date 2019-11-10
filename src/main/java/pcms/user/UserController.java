@@ -49,6 +49,7 @@ public final class UserController {
         userListView.searchTf.addActionListener(e -> index(e.getActionCommand()));
         userListView.addBtn.addActionListener(e -> create());
         userInfoView.editBtn.addActionListener(e -> edit(e.getActionCommand()));
+        userInfoView.backBtn.addActionListener(e -> index(userListView.searchTf.getText()));
         addUserView.saveBtn.addActionListener(e -> store());
         addUserView.cancelBtn.addActionListener(e -> index(""));
         editUserView.saveBtn.addActionListener(e -> update(e.getActionCommand()));
@@ -63,13 +64,14 @@ public final class UserController {
         rootView.mainView.contentView.render(ContentView.Views.USER_LIST);
 
         if (search.isEmpty()) {
-            userListView.render(userRepository.all(), e -> show(e.getActionCommand()));
+            userListView.render(userRepository.all(), search, e -> show(e.getActionCommand()));
         } else {
             userListView.render(
                     userRepository.filter(x ->
                         x.getId().toLowerCase(Locale.US).contains(lowerCase)
                         || x.getUsername().toLowerCase(Locale.US).contains(lowerCase)
                         || x.getFullName().toLowerCase(Locale.US).contains(lowerCase)),
+                    search,
                     e -> show(e.getActionCommand()));
         }
     }

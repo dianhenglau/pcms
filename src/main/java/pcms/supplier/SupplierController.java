@@ -49,6 +49,7 @@ public final class SupplierController {
         supplierListView.searchTf.addActionListener(e -> index(e.getActionCommand()));
         supplierListView.addBtn.addActionListener(e -> create());
         supplierInfoView.editBtn.addActionListener(e -> edit(e.getActionCommand()));
+        supplierInfoView.backBtn.addActionListener(e -> index(supplierListView.searchTf.getText()));
         addSupplierView.saveBtn.addActionListener(e -> store());
         addSupplierView.cancelBtn.addActionListener(e -> index(""));
         editSupplierView.saveBtn.addActionListener(e -> update(e.getActionCommand()));
@@ -63,13 +64,15 @@ public final class SupplierController {
         rootView.mainView.contentView.render(ContentView.Views.SUPPLIER_LIST);
 
         if (search.isEmpty()) {
-            supplierListView.render(supplierRepository.all(), e -> show(e.getActionCommand()));
+            supplierListView.render(
+                    supplierRepository.all(), search, e -> show(e.getActionCommand()));
         } else {
             supplierListView.render(
                     supplierRepository.filter(x ->
                         x.getId().toLowerCase(Locale.US).contains(lowerCase)
                         || x.getName().toLowerCase(Locale.US).contains(lowerCase)
                         || x.getPhone().toLowerCase(Locale.US).contains(lowerCase)),
+                    search,
                     e -> show(e.getActionCommand()));
         }
     }

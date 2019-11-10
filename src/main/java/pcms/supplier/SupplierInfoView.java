@@ -12,6 +12,8 @@ public final class SupplierInfoView {
     public final JPanel pane;
     /** Edit button. */
     public final JButton editBtn;
+    /** Back button. */
+    public final JButton backBtn;
     /** ID label. */
     private final JLabel idLbl;
     /** Full name label. */
@@ -30,6 +32,7 @@ public final class SupplierInfoView {
         pane = ViewUtil.createContainerPane("Supplier Info");
 
         editBtn = new JButton("Edit");
+        backBtn = new JButton("Back");
         idLbl = new JLabel();
         nameLbl = new JLabel();
         emailLbl = new JLabel();
@@ -42,7 +45,7 @@ public final class SupplierInfoView {
         final JComponent[] components = {
                 idLbl, nameLbl, emailLbl, phoneLbl, addressLbl, statusLbl};
 
-        pane.add(ViewUtil.createButtonControlPane(editBtn));
+        pane.add(ViewUtil.createButtonControlPane(backBtn, editBtn));
         pane.add(ViewUtil.createKeyValuePane(labels, components));
     }
 

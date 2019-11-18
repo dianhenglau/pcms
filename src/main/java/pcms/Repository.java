@@ -12,7 +12,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-/** Parent for all records. */
+/** Parent for all repositories. */
 public abstract class Repository<T extends Model> {
     /** Data path. */
     protected final Path dataPath;

@@ -95,6 +95,8 @@ Administrator only.
 
 Administrator only.
 
+- Search input
+
 - List of records
     - ID
     - User ID
@@ -107,7 +109,6 @@ Administrator only.
 
 - Add button
 - Search input
-- Search button
 
 - List of suppliers
     - ID
@@ -168,7 +169,6 @@ Administrator only.
 
 - Add button
 - Search input
-- Search button
 
 - List of categories
     - ID
@@ -205,7 +205,6 @@ Administrator only.
 
 - Add button
 - Search input
-- Search button
 
 - List of products
     - ID
@@ -268,11 +267,8 @@ Administrator only.
 
 # Catalog List Page
 
-Product manager only.
-
 - Add button
 - Search input
-- Search button
 
 - List of catalogs
     - ID (Reference number)
@@ -286,8 +282,6 @@ Product manager only.
     - Delete button
 
 # Catalog Info Page
-
-Product manager only.
 
 - ID (Reference number)
 - Title

@@ -37,6 +37,28 @@ public abstract class Repository<T extends Model> {
         this.recordParser = recordParser;
     }
 
+    /** All rows in reverse with start and count. */
+    public List<T> allInReverse(final int start, final int count) {
+        readFromFile();
+        final int begin = Math.max(cache.size() - start - 1, -1);
+        final int end = Math.max(begin - count, -1);
+        final List<T> result = new ArrayList<>(Math.max(begin - end, 0));
+        for (int i = begin; i > end; i--) {
+            result.add(cache.get(i));
+        }
+        return result;
+    }
+
+    /** All rows in reverse with count. */
+    public List<T> allInReverse(final int count) {
+        return allInReverse(0, count);
+    }
+
+    /** All rows in reverse. */
+    public List<T> allInReverse() {
+        return allInReverse(0, Integer.MAX_VALUE);
+    }
+
     /** All rows with start and count. */
     public List<T> all(final int start, final int count) {
         readFromFile();

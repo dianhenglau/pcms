@@ -25,8 +25,7 @@
 - Product list
 - Catalog list
 - Login record list (Administrator only)
-- Active user list (Administrator only)
-- Inactive user list (Administrator only)
+- User list (Administrator only)
 
 # User List Page
 

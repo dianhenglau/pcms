@@ -134,7 +134,6 @@ public final class ViewUtil {
 
         final JPanel row = createHorizontalPane();
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
-        row.setPreferredSize(new Dimension(row.getPreferredSize().width, 30));
 
         for (int i = 0; i < components.length; i++) {
             final JComponent c = components[i];
@@ -143,6 +142,7 @@ public final class ViewUtil {
             row.add(c);
             row.add(Box.createRigidArea(new Dimension(10, 0)));
         }
+        row.add(Box.createRigidArea(new Dimension(0, 30)));
 
         return row;
     }

@@ -9,10 +9,10 @@ import pcms.InvalidFieldException;
 import pcms.RootView;
 import pcms.Session;
 import pcms.ValidationUtil;
+import pcms.dashboard.DashboardController;
 import pcms.loginrecord.LoginRecord;
 import pcms.loginrecord.LoginRecordRepository;
 import pcms.user.User;
-import pcms.user.UserController;
 import pcms.user.UserRepository;
 
 /** Login controller. */
@@ -24,7 +24,7 @@ public final class LoginController {
     /** Login record repository. */
     private final LoginRecordRepository loginRecordRepository;
     /** User controller. */
-    private Optional<UserController> userController;
+    private Optional<DashboardController> dashboardController;
 
     /** Login view. */
     private final LoginView loginView;
@@ -44,13 +44,12 @@ public final class LoginController {
         this.loginRecordRepository = loginRecordRepository;
         this.loginView = loginView;
         this.rootView = rootView;
-        userController = Optional.empty();
+        dashboardController = Optional.empty();
     }
 
     /** Initialize. */
-    // TODO - Change userController to dashboardController
-    public void init(final UserController userController) {
-        this.userController = Optional.of(userController);
+    public void init(final DashboardController dashboardController) {
+        this.dashboardController = Optional.of(dashboardController);
         loginView.usernameTf.addActionListener(e -> login());
         loginView.passwordPf.addActionListener(e -> login());
         loginView.loginBtn.addActionListener(e -> login());
@@ -104,7 +103,7 @@ public final class LoginController {
 
             session.setUser(user);
             rootView.mainView.menuView.render(user);
-            userController.get().index("");
+            dashboardController.get().index();
 
         } catch (InvalidFieldException ex) {
             rootView.showErrorDialog(ex.getMessage());

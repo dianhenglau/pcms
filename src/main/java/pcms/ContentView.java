@@ -6,6 +6,7 @@ import pcms.category.AddCategoryView;
 import pcms.category.CategoryInfoView;
 import pcms.category.CategoryListView;
 import pcms.category.EditCategoryView;
+import pcms.dashboard.DashboardView;
 import pcms.loginrecord.LoginRecordListView;
 import pcms.profile.EditProfileView;
 import pcms.profile.ProfileView;
@@ -26,7 +27,8 @@ public final class ContentView { // NOPMD - Ok to have many fields
         PROFILE, EDIT_PROFILE,
         LOGIN_RECORD_LIST,
         CATEGORY_LIST, CATEGORY_INFO, ADD_CATEGORY, EDIT_CATEGORY,
-        SUPPLIER_LIST, SUPPLIER_INFO, ADD_SUPPLIER, EDIT_SUPPLIER 
+        SUPPLIER_LIST, SUPPLIER_INFO, ADD_SUPPLIER, EDIT_SUPPLIER,
+        DASHBOARD
     }
 
     /** User list view. */
@@ -64,6 +66,9 @@ public final class ContentView { // NOPMD - Ok to have many fields
     /** Edit supplier view. */
     public final EditSupplierView editSupplierView;
 
+    /** Dashboard view. */
+    public final DashboardView dashboardView;
+
     /** Pane. */
     public final JPanel pane;
     /** Card layout. */
@@ -85,7 +90,8 @@ public final class ContentView { // NOPMD - Ok to have many fields
             final SupplierListView supplierListView,
             final SupplierInfoView supplierInfoView,
             final AddSupplierView addSupplierView,
-            final EditSupplierView editSupplierView) {
+            final EditSupplierView editSupplierView,
+            final DashboardView dashboardView) {
 
         this.userListView = userListView;
         this.userInfoView = userInfoView;
@@ -102,6 +108,7 @@ public final class ContentView { // NOPMD - Ok to have many fields
         this.supplierInfoView = supplierInfoView;
         this.addSupplierView = addSupplierView;
         this.editSupplierView = editSupplierView;
+        this.dashboardView = dashboardView;
 
         cardLayout = ViewUtil.createVariableSizeCardLayout();
         pane = new JPanel(cardLayout);
@@ -121,6 +128,7 @@ public final class ContentView { // NOPMD - Ok to have many fields
         pane.add(supplierInfoView.pane, Views.SUPPLIER_INFO.name());
         pane.add(addSupplierView.pane, Views.ADD_SUPPLIER.name());
         pane.add(editSupplierView.pane, Views.EDIT_SUPPLIER.name());
+        pane.add(dashboardView.pane, Views.DASHBOARD.name());
     }
 
     /** Show a view with given key. */

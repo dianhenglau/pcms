@@ -1,7 +1,7 @@
 # Tasks
 
 - [x] Login module
-- [ ] Dashboard module
+- [x] Dashboard module
 - [x] User module
 - [x] Profile module
 - [x] Login record module
@@ -20,3 +20,4 @@
 - [ ] Show products in supplier info page
 - [ ] Filter login records by date
 - [ ] Filter users and suppliers by status
+- [ ] Dashboard suppliers and products

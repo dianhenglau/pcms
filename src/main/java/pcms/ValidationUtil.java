@@ -117,7 +117,17 @@ public final class ValidationUtil {
         }
         return x;
     }
-
+    
+    /** Make sure x is not negative. */
+    public static double notNegative(final String label, final double num){
+        if(num < 0){
+            throw new InvalidFieldException(label, capitalize(label)+" cannot be neagtive.");
+        }
+        return num;
+    }
+    
+    
+            
     private static String capitalize(final String x) {
         return x.substring(0, 1).toUpperCase(Locale.US) + x.substring(1);
     }

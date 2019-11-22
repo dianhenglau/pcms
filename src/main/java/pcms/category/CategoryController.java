@@ -56,7 +56,7 @@ public final class CategoryController {
         editCategoryView.cancelBtn.addActionListener(e -> show(e.getActionCommand()));
     }
 
-    /** List categorys. */
+    /** List categories. */
     public void index(final String search) {
         final String lowerCase = search.toLowerCase(Locale.US);
 

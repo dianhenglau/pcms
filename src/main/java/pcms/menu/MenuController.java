@@ -5,6 +5,7 @@ import pcms.Session;
 import pcms.category.CategoryController;
 import pcms.login.LoginController;
 import pcms.loginrecord.LoginRecordController;
+import pcms.product.ProductController;
 import pcms.profile.ProfileController;
 import pcms.supplier.SupplierController;
 import pcms.user.UserController;
@@ -37,7 +38,8 @@ public final class MenuController {
             final ProfileController profileController,
             final LoginRecordController loginRecordController,
             final CategoryController categoryController,
-            final SupplierController supplierController) {
+            final SupplierController supplierController,
+            final ProductController productController) {
 
         menuView.userBtn.addActionListener(e -> userController.index(""));
         menuView.logoutBtn.addActionListener(e -> loginController.logout());
@@ -45,6 +47,7 @@ public final class MenuController {
         menuView.loginRecordBtn.addActionListener(e -> loginRecordController.index(""));
         menuView.categoryBtn.addActionListener(e -> categoryController.index(""));
         menuView.supplierBtn.addActionListener(e -> supplierController.index(""));
+        menuView.productBtn.addActionListener(e -> productController.index(""));
     }
 }
 

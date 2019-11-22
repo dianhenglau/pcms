@@ -6,11 +6,17 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -169,6 +175,25 @@ public final class ViewUtil {
         lbl.setFont(f.deriveFont(f.getStyle() & ~Font.BOLD));
         return lbl;
     }
+    
+    /** Create icon label. */ 
+    public static JLabel createIconLabel(final String s){
+        try {
+            BufferedImage myPicture = ImageIO.read(new File(s));
+            JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+            return picLabel;
+        } catch (IOException ex){}
+        return new JLabel();
+    }
+    
+    /** Create full image label. */ 
+    public static ImageIcon createFullImageIcon(final String s){
+        try {
+            BufferedImage myPicture = ImageIO.read(new File(s));
+            return new ImageIcon(myPicture);
+        } catch (IOException ex){}
+        return new ImageIcon();
+    }
 
     /** Create text field. */
     public static JTextField createTextField(final int columns) {
@@ -209,6 +234,17 @@ public final class ViewUtil {
         ta.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ta.setBackground(new Color(0f, 0f, 0f, 0f));
         return ta;
+    }
+    
+    /** Create combo box. */
+    public static JComboBox createComboBox() {
+        final JComboBox cob = new JComboBox();
+        cob.setMaximumSize(new Dimension(300, 25));
+        cob.setPreferredSize(new Dimension(cob.getPreferredSize().width, 25));
+        cob.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(0.6f, 0.6f, 0.6f)),
+                BorderFactory.createEmptyBorder(0, 7, 0, 7)));
+        return cob;
     }
 
     /** Create centered input label. */

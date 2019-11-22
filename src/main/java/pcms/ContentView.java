@@ -7,6 +7,10 @@ import pcms.category.CategoryInfoView;
 import pcms.category.CategoryListView;
 import pcms.category.EditCategoryView;
 import pcms.loginrecord.LoginRecordListView;
+import pcms.product.AddProductView;
+import pcms.product.EditProductView;
+import pcms.product.ProductInfoView;
+import pcms.product.ProductListView;
 import pcms.profile.EditProfileView;
 import pcms.profile.ProfileView;
 import pcms.supplier.AddSupplierView;
@@ -26,7 +30,8 @@ public final class ContentView { // NOPMD - Ok to have many fields
         PROFILE, EDIT_PROFILE,
         LOGIN_RECORD_LIST,
         CATEGORY_LIST, CATEGORY_INFO, ADD_CATEGORY, EDIT_CATEGORY,
-        SUPPLIER_LIST, SUPPLIER_INFO, ADD_SUPPLIER, EDIT_SUPPLIER 
+        SUPPLIER_LIST, SUPPLIER_INFO, ADD_SUPPLIER, EDIT_SUPPLIER,
+        PRODUCT_LIST, PRODUCT_INFO, ADD_PRODUCT, EDIT_PRODUCT
     }
 
     /** User list view. */
@@ -63,7 +68,16 @@ public final class ContentView { // NOPMD - Ok to have many fields
     public final AddSupplierView addSupplierView;
     /** Edit supplier view. */
     public final EditSupplierView editSupplierView;
-
+    
+    /** Supplier list view. */
+    public final ProductListView productListView;
+    /** Supplier info view. */
+    public final ProductInfoView productInfoView;
+    /** Add supplier view. */
+    public final AddProductView addProductView;
+    /** Edit supplier view. */
+    public final EditProductView editProductView;
+    
     /** Pane. */
     public final JPanel pane;
     /** Card layout. */
@@ -85,7 +99,11 @@ public final class ContentView { // NOPMD - Ok to have many fields
             final SupplierListView supplierListView,
             final SupplierInfoView supplierInfoView,
             final AddSupplierView addSupplierView,
-            final EditSupplierView editSupplierView) {
+            final EditSupplierView editSupplierView,
+            final ProductListView productListView,
+            final ProductInfoView productInfoView,
+            final AddProductView addProductView,
+            final EditProductView editProductView) {
 
         this.userListView = userListView;
         this.userInfoView = userInfoView;
@@ -102,6 +120,10 @@ public final class ContentView { // NOPMD - Ok to have many fields
         this.supplierInfoView = supplierInfoView;
         this.addSupplierView = addSupplierView;
         this.editSupplierView = editSupplierView;
+        this.productListView = productListView;
+        this.productInfoView = productInfoView;
+        this.addProductView = addProductView;
+        this.editProductView = editProductView;
 
         cardLayout = ViewUtil.createVariableSizeCardLayout();
         pane = new JPanel(cardLayout);
@@ -121,6 +143,10 @@ public final class ContentView { // NOPMD - Ok to have many fields
         pane.add(supplierInfoView.pane, Views.SUPPLIER_INFO.name());
         pane.add(addSupplierView.pane, Views.ADD_SUPPLIER.name());
         pane.add(editSupplierView.pane, Views.EDIT_SUPPLIER.name());
+        pane.add(productListView.pane, Views.PRODUCT_LIST.name());
+        pane.add(productInfoView.pane, Views.PRODUCT_INFO.name());
+        pane.add(addProductView.pane, Views.ADD_PRODUCT.name());
+        pane.add(editProductView.pane, Views.EDIT_PRODUCT.name());
     }
 
     /** Show a view with given key. */

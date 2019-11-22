@@ -16,6 +16,12 @@ import pcms.loginrecord.LoginRecordListView;
 import pcms.loginrecord.LoginRecordRepository;
 import pcms.menu.MenuController;
 import pcms.menu.MenuView;
+import pcms.product.AddProductView;
+import pcms.product.EditProductView;
+import pcms.product.ProductController;
+import pcms.product.ProductInfoView;
+import pcms.product.ProductListView;
+import pcms.product.ProductRepository;
 import pcms.profile.EditProfileView;
 import pcms.profile.ProfileController;
 import pcms.profile.ProfileView;
@@ -44,6 +50,8 @@ public final class App {
     private final CategoryRepository categoryRepository;
     /** Supplier repository. */
     private final SupplierRepository supplierRepository;
+    /** Product repository. */
+    private final ProductRepository productRepository;
 
     /** Construct app. */
     public App() {
@@ -64,6 +72,8 @@ public final class App {
         categoryRepository = new CategoryRepository(getDataPath("categories.csv"));
         
         supplierRepository = new SupplierRepository(getDataPath("suppliers.csv"));
+        
+        productRepository = new ProductRepository(getDataPath("products.csv"), categoryRepository, supplierRepository);
     }
 
     /** Run app. */
@@ -89,6 +99,11 @@ public final class App {
         final AddSupplierView addSupplierView = new AddSupplierView();
         final EditSupplierView editSupplierView = new EditSupplierView();
 
+        final ProductListView productListView = new ProductListView();
+        final ProductInfoView productInfoView = new ProductInfoView();
+        final AddProductView addProductView = new AddProductView();
+        final EditProductView editProductView = new EditProductView();
+        
         final MenuView menuView = new MenuView();
         final ContentView contentView = new ContentView(
                 userListView,
@@ -105,7 +120,12 @@ public final class App {
                 supplierListView,
                 supplierInfoView,
                 addSupplierView,
-                editSupplierView);
+                editSupplierView,
+                productListView,
+                productInfoView,
+                addProductView,
+                editProductView);
+        
 
         final MainView mainView = new MainView(menuView, contentView);
         final LoginView loginView = new LoginView();
@@ -148,6 +168,17 @@ public final class App {
                 addSupplierView,
                 editSupplierView,
                 rootView);
+        final ProductController productController = new ProductController(
+                session,
+                productRepository,
+                categoryRepository,
+                supplierRepository,
+                productListView,
+                productInfoView,
+                addProductView,
+                editProductView,
+                rootView);
+        
 
         final MenuController menuController = new MenuController(
                 session,
@@ -166,6 +197,7 @@ public final class App {
         loginRecordController.init();
         categoryController.init();
         supplierController.init();
+        productController.init();
 
         menuController.init(
                 loginController,
@@ -173,7 +205,8 @@ public final class App {
                 profileController,
                 loginRecordController,
                 categoryController,
-                supplierController);
+                supplierController,
+                productController);
 
         loginController.init(userController);
 

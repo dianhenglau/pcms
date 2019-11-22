@@ -6,6 +6,7 @@ import pcms.category.AddCategoryView;
 import pcms.category.CategoryInfoView;
 import pcms.category.CategoryListView;
 import pcms.category.EditCategoryView;
+import pcms.dashboard.DashboardView;
 import pcms.loginrecord.LoginRecordListView;
 import pcms.product.AddProductView;
 import pcms.product.EditProductView;
@@ -31,7 +32,8 @@ public final class ContentView { // NOPMD - Ok to have many fields
         LOGIN_RECORD_LIST,
         CATEGORY_LIST, CATEGORY_INFO, ADD_CATEGORY, EDIT_CATEGORY,
         SUPPLIER_LIST, SUPPLIER_INFO, ADD_SUPPLIER, EDIT_SUPPLIER,
-        PRODUCT_LIST, PRODUCT_INFO, ADD_PRODUCT, EDIT_PRODUCT
+        PRODUCT_LIST, PRODUCT_INFO, ADD_PRODUCT, EDIT_PRODUCT,
+        DASHBOARD
     }
 
     /** User list view. */
@@ -77,7 +79,10 @@ public final class ContentView { // NOPMD - Ok to have many fields
     public final AddProductView addProductView;
     /** Edit supplier view. */
     public final EditProductView editProductView;
-    
+
+    /** Dashboard view. */
+    public final DashboardView dashboardView;
+
     /** Pane. */
     public final JPanel pane;
     /** Card layout. */
@@ -103,7 +108,8 @@ public final class ContentView { // NOPMD - Ok to have many fields
             final ProductListView productListView,
             final ProductInfoView productInfoView,
             final AddProductView addProductView,
-            final EditProductView editProductView) {
+            final EditProductView editProductView,
+            final DashboardView dashboardView) {
 
         this.userListView = userListView;
         this.userInfoView = userInfoView;
@@ -124,6 +130,7 @@ public final class ContentView { // NOPMD - Ok to have many fields
         this.productInfoView = productInfoView;
         this.addProductView = addProductView;
         this.editProductView = editProductView;
+        this.dashboardView = dashboardView;
 
         cardLayout = ViewUtil.createVariableSizeCardLayout();
         pane = new JPanel(cardLayout);
@@ -147,6 +154,7 @@ public final class ContentView { // NOPMD - Ok to have many fields
         pane.add(productInfoView.pane, Views.PRODUCT_INFO.name());
         pane.add(addProductView.pane, Views.ADD_PRODUCT.name());
         pane.add(editProductView.pane, Views.EDIT_PRODUCT.name());
+        pane.add(dashboardView.pane, Views.DASHBOARD.name());
     }
 
     /** Show a view with given key. */

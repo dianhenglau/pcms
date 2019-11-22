@@ -25,8 +25,7 @@
 - Product list
 - Catalog list
 - Login record list (Administrator only)
-- Active user list (Administrator only)
-- Inactive user list (Administrator only)
+- User list (Administrator only)
 
 # User List Page
 
@@ -95,6 +94,8 @@ Administrator only.
 
 Administrator only.
 
+- Search input
+
 - List of records
     - ID
     - User ID
@@ -107,7 +108,6 @@ Administrator only.
 
 - Add button
 - Search input
-- Search button
 
 - List of suppliers
     - ID
@@ -168,7 +168,6 @@ Administrator only.
 
 - Add button
 - Search input
-- Search button
 
 - List of categories
     - ID
@@ -205,7 +204,6 @@ Administrator only.
 
 - Add button
 - Search input
-- Search button
 
 - List of products
     - ID
@@ -268,11 +266,8 @@ Administrator only.
 
 # Catalog List Page
 
-Product manager only.
-
 - Add button
 - Search input
-- Search button
 
 - List of catalogs
     - ID (Reference number)
@@ -286,8 +281,6 @@ Product manager only.
     - Delete button
 
 # Catalog Info Page
-
-Product manager only.
 
 - ID (Reference number)
 - Title

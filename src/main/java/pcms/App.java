@@ -8,6 +8,8 @@ import pcms.category.CategoryInfoView;
 import pcms.category.CategoryListView;
 import pcms.category.CategoryRepository;
 import pcms.category.EditCategoryView;
+import pcms.dashboard.DashboardController;
+import pcms.dashboard.DashboardView;
 import pcms.login.LoginController;
 import pcms.login.LoginView;
 import pcms.loginrecord.LoginRecord;
@@ -98,12 +100,11 @@ public final class App {
         final SupplierInfoView supplierInfoView = new SupplierInfoView();
         final AddSupplierView addSupplierView = new AddSupplierView();
         final EditSupplierView editSupplierView = new EditSupplierView();
-
         final ProductListView productListView = new ProductListView();
         final ProductInfoView productInfoView = new ProductInfoView();
         final AddProductView addProductView = new AddProductView();
         final EditProductView editProductView = new EditProductView();
-        
+        final DashboardView dashboardView = new DashboardView();
         final MenuView menuView = new MenuView();
         final ContentView contentView = new ContentView(
                 userListView,
@@ -124,8 +125,8 @@ public final class App {
                 productListView,
                 productInfoView,
                 addProductView,
-                editProductView);
-        
+                editProductView,
+                dashboardView);
 
         final MainView mainView = new MainView(menuView, contentView);
         final LoginView loginView = new LoginView();
@@ -178,7 +179,13 @@ public final class App {
                 addProductView,
                 editProductView,
                 rootView);
-        
+        final DashboardController dashboardController = new DashboardController(
+                session,
+                supplierRepository,
+                loginRecordRepository,
+                userRepository,
+                dashboardView,
+                rootView);
 
         final MenuController menuController = new MenuController(
                 session,
@@ -198,6 +205,10 @@ public final class App {
         categoryController.init();
         supplierController.init();
         productController.init();
+        dashboardController.init(
+                supplierController, 
+                loginRecordController,
+                userController);
 
         menuController.init(
                 loginController,
@@ -206,9 +217,10 @@ public final class App {
                 loginRecordController,
                 categoryController,
                 supplierController,
-                productController);
+                productController,
+                dashboardController);
 
-        loginController.init(userController);
+        loginController.init(dashboardController);
 
         // Load login page.
         loginController.index();

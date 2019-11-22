@@ -186,6 +186,55 @@ class RepositoryTest {
         assertEquals(ROW5, someCars.get(4).toRow());
     }
 
+    /** Test all in reverse with start and count. */
+    @Test
+    public void testAllInReverseWithStartAndCount() {
+        final Cars cars = new Cars(TestUtil.getDataPath("cars.csv"));
+        List<Car> someCars = cars.allInReverse(1, 2);
+        assertEquals(2, someCars.size());
+        assertEquals(ROW4, someCars.get(0).toRow());
+        assertEquals(ROW3, someCars.get(1).toRow());
+
+        someCars = cars.allInReverse(4, 100_000);
+        assertEquals(1, someCars.size());
+        assertEquals(ROW1, someCars.get(0).toRow());
+
+        someCars = cars.allInReverse(5, 3);
+        assertEquals(0, someCars.size());
+    }
+
+    /** Test all in reverse with count. */
+    @Test
+    public void testAllInReverseWithCount() {
+        final Cars cars = new Cars(TestUtil.getDataPath("cars.csv"));
+        List<Car> someCars = cars.allInReverse(3);
+        assertEquals(3, someCars.size());
+        assertEquals(ROW5, someCars.get(0).toRow());
+        assertEquals(ROW4, someCars.get(1).toRow());
+        assertEquals(ROW3, someCars.get(2).toRow());
+        
+        someCars = cars.allInReverse(100);
+        assertEquals(5, someCars.size());
+        assertEquals(ROW5, someCars.get(0).toRow());
+        assertEquals(ROW4, someCars.get(1).toRow());
+        assertEquals(ROW3, someCars.get(2).toRow());
+        assertEquals(ROW2, someCars.get(3).toRow());
+        assertEquals(ROW1, someCars.get(4).toRow());
+    }
+
+    /** Test all in reverse. */
+    @Test
+    public void testAllInReverse() {
+        final Cars cars = new Cars(TestUtil.getDataPath("cars.csv"));
+        final List<Car> someCars = cars.allInReverse();
+        assertEquals(5, someCars.size());
+        assertEquals(ROW5, someCars.get(0).toRow());
+        assertEquals(ROW4, someCars.get(1).toRow());
+        assertEquals(ROW3, someCars.get(2).toRow());
+        assertEquals(ROW2, someCars.get(3).toRow());
+        assertEquals(ROW1, someCars.get(4).toRow());
+    }
+
     /** Test find with ID. */
     @Test
     public void testFindWithId() {

@@ -1,7 +1,7 @@
 # Tasks
 
 - [x] Login module
-- [ ] Dashboard module
+- [x] Dashboard module
 - [x] User module
 - [x] Profile module
 - [x] Login record module
@@ -14,8 +14,10 @@
 - [ ] Pagination
 - [x] Variable page size
 - [x] Jump to top left corner after page switch
-- [ ] Back button
+- [x] Back button
 - [ ] Refine menu button focus and mouse pressed style
 - [ ] Check dependency before delete
 - [ ] Show products in supplier info page
 - [ ] Filter login records by date
+- [ ] Filter users and suppliers by status
+- [ ] Dashboard suppliers and products

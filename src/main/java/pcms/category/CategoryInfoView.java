@@ -28,8 +28,8 @@ public final class CategoryInfoView {
 
         editBtn = new JButton("Edit");
         backBtn = new JButton("Back");
-        idLbl = new JLabel();
-        nameLbl = new JLabel();
+        idLbl = ViewUtil.createValueLabel();
+        nameLbl = ViewUtil.createValueLabel();
         descriptionTa = ViewUtil.createViewOnlyTextArea();
 
         final String[] labels = {"ID", "Name", "Description"};

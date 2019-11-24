@@ -134,6 +134,13 @@ public final class ViewUtil {
         return pane;
     }
 
+    /** Create value label. */
+    public static JLabel createValueLabel() {
+        final JLabel label = new JLabel();
+        label.setMaximumSize(new Dimension(Integer.MAX_VALUE, 26));
+        return label;
+    }
+
     /** Create table body row. */
     public static JPanel createBodyRow(final JComponent[] components, final int[] widths) {
         assert components.length == widths.length;

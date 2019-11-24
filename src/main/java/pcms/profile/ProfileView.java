@@ -37,15 +37,15 @@ public final class ProfileView {
         pane = ViewUtil.createContainerPane("Profile");
 
         editBtn = new JButton("Edit");
-        idLbl = new JLabel();
-        fullNameLbl = new JLabel();
-        addressLbl = new JLabel();
-        emailLbl = new JLabel();
-        administratorLbl = new JLabel();
-        productManagerLbl = new JLabel();
-        usernameLbl = new JLabel();
-        passwordLbl = new JLabel();
-        statusLbl = new JLabel();
+        idLbl = ViewUtil.createValueLabel();
+        fullNameLbl = ViewUtil.createValueLabel();
+        addressLbl = ViewUtil.createValueLabel();
+        emailLbl = ViewUtil.createValueLabel();
+        administratorLbl = ViewUtil.createValueLabel();
+        productManagerLbl = ViewUtil.createValueLabel();
+        usernameLbl = ViewUtil.createValueLabel();
+        passwordLbl = ViewUtil.createValueLabel();
+        statusLbl = ViewUtil.createValueLabel();
 
         final String[] labels = {
                 "ID", "Full name", "Email", "Address", "Administrator", 

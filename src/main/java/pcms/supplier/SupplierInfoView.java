@@ -33,12 +33,12 @@ public final class SupplierInfoView {
 
         editBtn = new JButton("Edit");
         backBtn = new JButton("Back");
-        idLbl = new JLabel();
-        nameLbl = new JLabel();
-        emailLbl = new JLabel();
-        phoneLbl = new JLabel();
-        addressLbl = new JLabel();
-        statusLbl = new JLabel();
+        idLbl = ViewUtil.createValueLabel();
+        nameLbl = ViewUtil.createValueLabel();
+        emailLbl = ViewUtil.createValueLabel();
+        phoneLbl = ViewUtil.createValueLabel();
+        addressLbl = ViewUtil.createValueLabel();
+        statusLbl = ViewUtil.createValueLabel();
 
         final String[] labels = {
                 "ID", "Name", "Email", "Phone", "Address", "Status"};

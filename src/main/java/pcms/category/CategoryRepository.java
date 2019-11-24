@@ -1,6 +1,7 @@
 package pcms.category;
 
 import java.nio.file.Path;
+import java.util.Optional;
 import pcms.Repository;
 import pcms.ValidationUtil;
 
@@ -47,5 +48,10 @@ public final class CategoryRepository extends Repository<Category> {
         cache.set(index, category);
         writeToFile();
         return cache.get(index);
+    }
+
+    /** Find with name. */
+    public Optional<Category> findWithName(final String name) {
+        return cache.stream().filter(x -> name.equals(x.getName())).findFirst();
     }
 }

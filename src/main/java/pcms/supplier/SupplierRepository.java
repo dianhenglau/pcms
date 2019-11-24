@@ -1,6 +1,7 @@
 package pcms.supplier;
 
 import java.nio.file.Path;
+import java.util.Optional;
 import pcms.Repository;
 import pcms.ValidationUtil;
 
@@ -17,7 +18,8 @@ public final class SupplierRepository extends Repository<Supplier> {
         readFromFile();
 
         // Make sure name length is at least one.
-        ValidationUtil.validMinLength("name", supplier.getName(), 1);
+        ValidationUtil.validMinLength("name", supplier.getName(), 1); // NOPMD
+        ValidationUtil.notExists("name", supplier.getName(), cache, Supplier::getName);
 
         // Make sure email is valid.
         ValidationUtil.notEmpty("email", supplier.getEmail()); // NOPMD - Ok to duplicate literal
@@ -47,6 +49,8 @@ public final class SupplierRepository extends Repository<Supplier> {
 
         // Make sure name length is at least one.
         ValidationUtil.validMinLength("name", supplier.getName(), 1);
+        ValidationUtil.notExists("name", supplier.getName(), cache, Supplier::getName,
+                supplier.getId(), Supplier::getId);
 
         // Make sure email is valid.
         ValidationUtil.notEmpty("email", supplier.getEmail());
@@ -58,5 +62,10 @@ public final class SupplierRepository extends Repository<Supplier> {
         cache.set(index, supplier);
         writeToFile();
         return cache.get(index);
+    }
+
+    /** Find with name. */
+    public Optional<Supplier> findWithName(final String name) {
+        return cache.stream().filter(x -> name.equals(x.getName())).findFirst();
     }
 }

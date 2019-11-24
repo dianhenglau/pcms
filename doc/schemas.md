@@ -12,7 +12,7 @@
 # Supplier
 
 - ID (PK)
-- Name
+- Name (UK)
 - Email
 - Phone
 - Address

@@ -20,7 +20,7 @@ plugins {
     pmd
 
     // Apply the spotbugs plugin to add support for bug discovery
-    id("com.github.spotbugs") version "2.0.0"
+    id("com.github.spotbugs") version "2.0.1"
 }
 
 repositories {
@@ -34,16 +34,16 @@ dependencies {
     implementation("com.google.guava:guava:28.0-jre")
 
     // Use JUnit Jupiter API for testing.
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.1")
 
     // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.1")
 
     // To use spotbugs annotation.
     compileOnly("com.github.spotbugs:spotbugs-annotations:4.0.0-beta4")
 
     // To use mockito
-    testCompile("org.mockito:mockito-junit-jupiter:3.1.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:3.1.0")
 }
 
 application {
@@ -106,4 +106,9 @@ tasks.withType(com.github.spotbugs.SpotBugsTask::class) {
                 ?.also { logger.warn(it) }
         }
     })
+}
+
+tasks.withType(JavaCompile::class) {
+    options.setDeprecation(true)
+    options.getCompilerArgs().add("-Xlint:unchecked")
 }

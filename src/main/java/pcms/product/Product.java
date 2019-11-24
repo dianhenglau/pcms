@@ -12,18 +12,17 @@ import pcms.category.CategoryRepository;
 import pcms.supplier.Supplier;
 import pcms.supplier.SupplierRepository;
 
-/** Models user. */
+/** Models product. */
 public final class Product implements Model {
     /** Category repository which help to get category. */
     private static Optional<CategoryRepository> categoryRepository = Optional.empty();
-    
     /** Supplier repository which help to get supplier. */
     private static Optional<SupplierRepository> supplierRepository = Optional.empty();
     
     /** ID. */
     private final String id;
-    /** Image. */
-    private final String image; //file path
+    /** Image. Its a filename. */
+    private final String image;
     /** Full name. */
     private final String name;
     /** Brand. */
@@ -36,13 +35,13 @@ public final class Product implements Model {
     private final String description;
     /** Retail Price. */
     private final double retailPrice;
-    /** Discount. */
-    private final double discount; //percent exp 30
+    /** Discount. In percentage, e.g. 30. */
+    private final double discount;
     /** Supplier ID. */
     private final String supplierId;
 
     /** Construct from Product.Builder. */
-    private Product(final Builder builder){
+    private Product(final Builder builder) {
         this.id = builder.id;
         this.image = builder.image;
         this.name = builder.name;
@@ -133,22 +132,22 @@ public final class Product implements Model {
     }
     
     /** Get category. */
-    public Category getCategory(){
+    public Category getCategory() {
         return categoryRepository.get().findWithId(categoryId).get();
     }
     
     /** Set category repository. */
-    public static void setCategoryRepository(final CategoryRepository repository){
+    public static void setCategoryRepository(final CategoryRepository repository) {
         categoryRepository = Optional.of(repository);
     }
     
     /** Get supplier. */
-    public Supplier getSupplier(){
+    public Supplier getSupplier() {
         return supplierRepository.get().findWithId(supplierId).get();
     }
     
     /** Set category repository. */
-    public static void setSupplierRepository(final SupplierRepository repository){
+    public static void setSupplierRepository(final SupplierRepository repository) {
         supplierRepository = Optional.of(repository);
     }
 
@@ -156,8 +155,8 @@ public final class Product implements Model {
     public static class Builder implements Model.Builder {
         /** ID. */
         private String id;
-        /** Image. */
-        private String image; //file path
+        /** Image. It is a filename. */
+        private String image;
         /** Full name. */
         private String name;
         /** Brand. */
@@ -206,53 +205,63 @@ public final class Product implements Model {
             supplierId = product.supplierId;
         }
         
+        /** Set id. */
         @Override
-        public Builder withId(String id) {
+        public Builder withId(final String id) {
             this.id = id;
             return this;
         }
 
-        public Builder withImage(String image) {
+        /** Set image. */
+        public Builder withImage(final String image) {
             this.image = image;
             return this;
         }
 
-        public Builder withName(String name) {
+        /** Set name. */
+        public Builder withName(final String name) {
             this.name = name;
             return this;
         }
 
-        public Builder withBrand(String brand) {
+        /** Set brand. */
+        public Builder withBrand(final String brand) {
             this.brand = brand;
             return this;
         }
 
-        public Builder withCategoryId(String categoryId) {
+        /** Set category ID. */
+        public Builder withCategoryId(final String categoryId) {
             this.categoryId = categoryId;
             return this;
         }
 
-        public Builder withQuantity(int quantity) {
+        /** Set quantity. */
+        public Builder withQuantity(final int quantity) {
             this.quantity = quantity;
             return this;
         }
 
-        public Builder withDescription(String description) {
+        /** Set description. */
+        public Builder withDescription(final String description) {
             this.description = description;
             return this;
         }
 
-        public Builder withRetailPrice(double retailPrice) {
+        /** Set retail price. */
+        public Builder withRetailPrice(final double retailPrice) {
             this.retailPrice = retailPrice;
             return this;
         }
 
-        public Builder withDiscount(double discount) {
+        /** Set discount. */
+        public Builder withDiscount(final double discount) {
             this.discount = discount;
             return this;
         }
 
-        public Builder withSupplierId(String supplierId) {
+        /** Set supplier ID. */
+        public Builder withSupplierId(final String supplierId) {
             this.supplierId = supplierId;
             return this;
         }

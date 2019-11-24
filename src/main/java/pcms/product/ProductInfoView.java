@@ -1,10 +1,5 @@
 package pcms.product;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -18,6 +13,8 @@ public final class ProductInfoView {
     public final JPanel pane;
     /** Edit button. */
     public final JButton editBtn;
+    /** Back button. */
+    public final JButton backBtn;
     /** ID label. */
     private final JLabel idLbl;
     /** Image label. */
@@ -44,16 +41,17 @@ public final class ProductInfoView {
         pane = ViewUtil.createContainerPane("Product Info");
 
         editBtn = new JButton("Edit");
-        idLbl = new JLabel();
-        imageLbl = new JLabel();
-        nameLbl = new JLabel();
-        brandLbl = new JLabel();
-        categoryLbl = new JLabel();
-        quantityLbl = new JLabel();
+        backBtn = new JButton("Back");
+        idLbl = ViewUtil.createValueLabel();
+        imageLbl = ViewUtil.createFullImageLabel();
+        nameLbl = ViewUtil.createValueLabel();
+        brandLbl = ViewUtil.createValueLabel();
+        categoryLbl = ViewUtil.createValueLabel();
+        quantityLbl = ViewUtil.createValueLabel();
         descriptionLbl = ViewUtil.createViewOnlyTextArea();
-        retailPriceLbl = new JLabel();
-        discountLbl = new JLabel();
-        supplierLbl = new JLabel();
+        retailPriceLbl = ViewUtil.createValueLabel();
+        discountLbl = ViewUtil.createValueLabel();
+        supplierLbl = ViewUtil.createValueLabel();
 
         final String[] labels = {
                 "ID", "Image", "Name", "Brand", "Category",
@@ -62,7 +60,7 @@ public final class ProductInfoView {
                 idLbl, imageLbl, nameLbl, brandLbl, categoryLbl,
                 quantityLbl, descriptionLbl, retailPriceLbl, discountLbl, supplierLbl};
 
-        pane.add(ViewUtil.createButtonControlPane(editBtn));
+        pane.add(ViewUtil.createButtonControlPane(backBtn, editBtn));
         pane.add(ViewUtil.createKeyValuePane(labels, components));
     }
     

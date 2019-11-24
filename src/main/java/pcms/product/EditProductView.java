@@ -1,14 +1,18 @@
 package pcms.product;
 
+import java.text.NumberFormat;
+import java.util.List;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import pcms.ViewUtil;
+import pcms.category.Category;
+import pcms.supplier.Supplier;
 
 /** Edit product view. */
 public final class EditProductView {
@@ -24,72 +28,94 @@ public final class EditProductView {
     public final JButton imageBtn;
     /** Image label. */
     public final JLabel imageLbl;
-    /** Image file path label. */
-    public final JLabel imageFilePathLbl;
+    /** Filename label. */
+    public final JLabel filenameLbl;
     /** Name text field. */
     public final JTextField nameTf;
     /** Brand text field. */
     public final JTextField brandTf;
     /** Category combo box. */
-    public final JComboBox categoryCob;
+    public final JComboBox<String> categoryCob;
     /** Quantity text field. */
-    public final JTextField quantityTf;
+    public final JFormattedTextField quantityTf;
     /** Description text area. */
     public final JTextArea descriptionTa;
     /** Retail Price text field. */
-    public final JTextField retailPriceTf;
+    public final JFormattedTextField retailPriceTf;
     /** Discount text field. */
-    public final JTextField discountTf;
+    public final JFormattedTextField discountTf;
     /** Supplier combo box. */
-    public final JComboBox supplierCob;
+    public final JComboBox<String> supplierCob;
 
     /** Construct. */
     public EditProductView() {
         pane = ViewUtil.createContainerPane("Edit Product");
         
-        String[] categoryStrings = {};
-        String[] supplierStrings = {};
-
         cancelBtn = new JButton("Cancel");
         saveBtn = new JButton("Save");
-        idLbl = new JLabel();
+        idLbl = ViewUtil.createValueLabel();
         nameTf = ViewUtil.createTextField(25);
-        imageLbl = new JLabel();
-        imageFilePathLbl = new JLabel();
-        imageBtn = new JButton("Add File");
+        imageLbl = ViewUtil.createFullImageLabel();
+        filenameLbl = ViewUtil.createUnboldLabel("");
+        imageBtn = new JButton("Add Image");
         brandTf = ViewUtil.createTextField(25);
-        categoryCob = new JComboBox(categoryStrings);
-        quantityTf = ViewUtil.createTextField(25);
+        categoryCob = ViewUtil.createComboBox();
+        quantityTf = ViewUtil.createFormattedTextField(NumberFormat.getIntegerInstance());
         descriptionTa = ViewUtil.createTextArea();
-        retailPriceTf = ViewUtil.createTextField(25);
-        discountTf = ViewUtil.createTextField(25);
-        supplierCob = new JComboBox(supplierStrings);
+        retailPriceTf = ViewUtil.createFormattedTextField(NumberFormat.getCurrencyInstance());
+        discountTf = ViewUtil.createFormattedTextField(NumberFormat.getPercentInstance());
+        supplierCob = ViewUtil.createComboBox();
+
+        final JPanel imagePane = ViewUtil.createImagePane(imageLbl, filenameLbl, imageBtn);
 
         final String[] labels = {
-                "ID", "Name", "Image", "Image File Path", "Brand", "Catergory", 
+                "ID", "Name", "Image", "Brand", "Catergory", 
                 "Quantity", "Description", "Retail Price", "Discount", "Supplier"};
         final JComponent[] components = {
-                idLbl, nameTf, imageLbl, imageFilePathLbl, brandTf, categoryCob, 
-                quantityTf, descriptionTa, retailPriceTf, discountTf, supplierCob};
+                idLbl, nameTf, imagePane, brandTf, categoryCob, 
+                quantityTf, ViewUtil.createScrollPane(descriptionTa, 450, 100),
+                retailPriceTf, discountTf, supplierCob};
 
-        pane.add(ViewUtil.createButtonControlPane(imageBtn, cancelBtn, saveBtn));
+        pane.add(ViewUtil.createButtonControlPane(cancelBtn, saveBtn));
         pane.add(ViewUtil.createKeyValuePane(labels, components));
     }
 
     /** Render. */
-    public void render(final Product product) {
+    public void render(
+            final Product product, 
+            final List<Category> categories, 
+            final List<Supplier> suppliers) {
+
         saveBtn.setActionCommand(product.getId());
         cancelBtn.setActionCommand(product.getId());
+
         idLbl.setText(product.getId());
         nameTf.setText(product.getName());
         imageLbl.setIcon(ViewUtil.createFullImageIcon(product.getImage()));
-        imageFilePathLbl.setText(product.getImage());
+        filenameLbl.setText(product.getImage());
         brandTf.setText(product.getBrand());
-        categoryCob.setSelectedItem(product.getCategory());
-        quantityTf.setText(Integer.toString(product.getQuantity()));
+
+        categoryCob.removeAllItems();
+        for (final Category c : categories) {
+            categoryCob.addItem(c.getName());
+        }
+        categoryCob.setSelectedItem(product.getCategory().getName());
+
+        quantityTf.setValue(Integer.valueOf(product.getQuantity()));
         descriptionTa.setText(product.getDescription());
-        retailPriceTf.setText(Double.toString(product.getRetailPrice()));
-        discountTf.setText(Double.toString(product.getDiscount()));
-        supplierCob.setSelectedItem(product.getSupplier());
+        retailPriceTf.setValue(Double.valueOf(product.getRetailPrice()));
+        discountTf.setValue(Double.valueOf(product.getDiscount()));
+
+        supplierCob.removeAllItems();
+        for (final Supplier s : suppliers) {
+            supplierCob.addItem(s.getName());
+        }
+        supplierCob.setSelectedItem(product.getSupplier().getName());
+    }
+
+    /** Render image. */
+    public void renderImage(final String imagePath) {
+        imageLbl.setIcon(ViewUtil.createFullImageIcon(imagePath));
+        filenameLbl.setText(imagePath);
     }
 }

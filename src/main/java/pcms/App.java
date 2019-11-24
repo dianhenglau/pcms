@@ -89,7 +89,10 @@ public final class App {
         
         supplierRepository = new SupplierRepository(getDataPath("suppliers.csv"));
         
-        productRepository = new ProductRepository(getDataPath("products.csv"), categoryRepository, supplierRepository);
+        productRepository = new ProductRepository(
+                getDataPath("products.csv"), categoryRepository, supplierRepository);
+        Product.setCategoryRepository(categoryRepository);
+        Product.setSupplierRepository(supplierRepository);
     }
 
     /** Run app. */

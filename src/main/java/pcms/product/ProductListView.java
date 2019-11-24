@@ -14,12 +14,12 @@ import pcms.ViewUtil;
 public final class ProductListView {
     /** Table columns. */
     private static final String[] COLUMNS = {
-            "ID", "Image", "Name", "Brand", "Category",
-            "Quantity", "Retail Price", "Discount", "Supplier", "Actions"};
+            "ID", "Image", "Name", "Category", "Quantity", 
+            "Price", "Discount", "Supplier", "Actions"};
     /** Table column width. */
     private static final int[] WIDTHS = {
-            70, 120, 120, 100, 100, 
-            60, 60, 60, 100, 120};
+            70, 70, 120, 100, 60, 
+            60, 60, 100, 160};
 
     /** Pane. */
     public final JPanel pane;
@@ -56,8 +56,8 @@ public final class ProductListView {
         searchTf.setText(search);
         tablePane.removeAll();
         tablePane.add(headerRow);
-        for (final Product u : products) {
-            tablePane.add(toTableRow(u, goView, goDelete));
+        for (final Product p : products) {
+            tablePane.add(toTableRow(p, goView, goDelete));
         }
         tablePane.revalidate();
         tablePane.repaint();
@@ -81,22 +81,18 @@ public final class ProductListView {
         actionPane.add(viewBtn);
         actionPane.add(Box.createRigidArea(new Dimension(5, 0)));
         actionPane.add(deleteBtn);
-        
-        
 
         final JComponent[] components = {
                 ViewUtil.createUnboldLabel(product.getId()),
-                ViewUtil.createIconLabel(product.getImage()),
+                ViewUtil.createThumbnailLabel(product.getImage()),
                 ViewUtil.createUnboldLabel(product.getName()),
                 ViewUtil.createUnboldLabel(product.getCategory().getName()),
                 ViewUtil.createUnboldLabel(Integer.toString(product.getQuantity())),
                 ViewUtil.createUnboldLabel(String.format("%.2f", product.getRetailPrice())),
                 ViewUtil.createUnboldLabel(String.format("%.0f%%", product.getDiscount())),
                 ViewUtil.createUnboldLabel(product.getSupplier().getName()),
-                actionPane
-        };
+                actionPane};
 
         return ViewUtil.createBodyRow(components, WIDTHS);
     }
-
 }

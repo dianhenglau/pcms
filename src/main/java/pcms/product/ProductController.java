@@ -1,6 +1,10 @@
 package pcms.product;
 
 import java.util.Locale;
+import java.util.Optional;
+import java.util.function.Consumer;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import pcms.ContentView;
 import pcms.InvalidFieldException;
 import pcms.RootView;
@@ -14,13 +18,14 @@ import pcms.supplier.SupplierRepository;
 /** Product controller. */
 public final class ProductController {
     /** Session. */
-    private final Session session;
+    private final Session session; // NOPMD - temporaray
     /** Product repository. */
     private final ProductRepository productRepository;
     /** Product repository. */
     private final CategoryRepository categoryRepository;
     /** Product repository. */
     private final SupplierRepository supplierRepository;
+
     /** Product list view. */
     private final ProductListView productListView;
     /** Product info view. */
@@ -60,10 +65,13 @@ public final class ProductController {
         productListView.searchTf.addActionListener(e -> index(e.getActionCommand()));
         productListView.addBtn.addActionListener(e -> create());
         productInfoView.editBtn.addActionListener(e -> edit(e.getActionCommand()));
+        productInfoView.backBtn.addActionListener(e -> index(productListView.searchTf.getText()));
         addProductView.saveBtn.addActionListener(e -> store());
         addProductView.cancelBtn.addActionListener(e -> index(""));
+        addProductView.imageBtn.addActionListener(e -> chooseImage(addProductView::renderImage));
         editProductView.saveBtn.addActionListener(e -> update(e.getActionCommand()));
         editProductView.cancelBtn.addActionListener(e -> show(e.getActionCommand()));
+        editProductView.imageBtn.addActionListener(e -> chooseImage(editProductView::renderImage));
     }
 
     /** List products. */
@@ -100,18 +108,42 @@ public final class ProductController {
     /** Store created product. */
     public void store() {
         try {
+            final String categoryName = (String) addProductView.categoryCob.getSelectedItem();
+            if (categoryName == null) {
+                throw new InvalidFieldException("category", "Category is required."); // NOPMD
+            }
+
+            final Optional<Category> category = categoryRepository.findWithName(categoryName);
+            if (category.isEmpty()) {
+                throw new InvalidFieldException("category ID", "Category ID not found.");
+            }
+
+            final String supplierName = (String) addProductView.supplierCob.getSelectedItem();
+            if (supplierName == null) {
+                throw new InvalidFieldException("category", "Category is required.");
+            }
+
+            final Optional<Supplier> supplier = supplierRepository.findWithName(supplierName);
+            if (supplier.isEmpty()) {
+                throw new InvalidFieldException("supplier ID", "Supplier ID not found.");
+            }
+
             final Product newProduct = productRepository.insert(new Product.Builder()
                     .withName(addProductView.nameTf.getText())
-                    .withImage(addProductView.imageFilePathLbl.getText())
+                    .withImage(addProductView.filenameLbl.getText())
                     .withBrand(addProductView.brandTf.getText())
-                    .withCategoryId(((Category)addProductView.categoryCob.getSelectedItem()).getId())
-                    .withQuantity(Integer.parseInt(addProductView.quantityTf.getText()))
+                    .withCategoryId(category.get().getId())
+                    .withQuantity(((Number) addProductView.quantityTf.getValue()).intValue())
                     .withDescription(addProductView.descriptionTa.getText())
-                    .withRetailPrice(Double.parseDouble(addProductView.retailPriceTf.getText()))
-                    .withSupplierId(((Supplier)addProductView.supplierCob.getSelectedItem()).getId())
+                    .withRetailPrice(((Number) addProductView.retailPriceTf.getValue())
+                        .doubleValue())
+                    .withDiscount(((Number) addProductView.discountTf.getValue()).doubleValue())
+                    .withSupplierId(supplier.get().getId())
                     .build());
+
             rootView.showSuccessDialog("Product added.");
             show(newProduct.getId());
+
         } catch (InvalidFieldException ex) {
             rootView.showErrorDialog(ex.getMessage());
         }
@@ -135,7 +167,7 @@ public final class ProductController {
             final Product product = ValidationUtil.recordExists(productRepository, id);
             rootView.render(RootView.Views.MAIN_VIEW);
             rootView.mainView.contentView.render(ContentView.Views.EDIT_PRODUCT);
-            editProductView.render(product);
+            editProductView.render(product, categoryRepository.all(), supplierRepository.all());
         } catch (InvalidFieldException ex) {
             rootView.showErrorDialog(ex.getMessage());
         }
@@ -144,25 +176,46 @@ public final class ProductController {
     /** Update product info. */
     public void update(final String id) {
         try {
+            final String categoryName = (String) editProductView.categoryCob.getSelectedItem();
+            if (categoryName == null) {
+                throw new InvalidFieldException("category", "Category is required.");
+            }
+
+            final Optional<Category> category = categoryRepository.findWithName(categoryName);
+            if (category.isEmpty()) {
+                throw new InvalidFieldException("category ID", "Category ID not found.");
+            }
+
+            final String supplierName = (String) editProductView.supplierCob.getSelectedItem();
+            if (supplierName == null) {
+                throw new InvalidFieldException("category", "Category is required.");
+            }
+
+            final Optional<Supplier> supplier = supplierRepository.findWithName(supplierName);
+            if (supplier.isEmpty()) {
+                throw new InvalidFieldException("supplier ID", "Supplier ID not found.");
+            }
+
             final Product product = ValidationUtil.recordExists(productRepository, id);
             final Product newProduct = productRepository.update(new Product.Builder(product)
-                    .withId(id)
                     .withName(editProductView.nameTf.getText())
-                    .withImage(editProductView.imageFilePathLbl.getText())
+                    .withImage(editProductView.filenameLbl.getText())
                     .withBrand(editProductView.brandTf.getText())
-                    .withCategoryId(((Category)editProductView.categoryCob.getSelectedItem()).getId())
-                    .withQuantity(Integer.parseInt(editProductView.quantityTf.getText()))
+                    .withCategoryId(category.get().getId())
+                    .withQuantity(((Number) editProductView.quantityTf.getValue()).intValue())
                     .withDescription(editProductView.descriptionTa.getText())
-                    .withRetailPrice(Double.parseDouble(editProductView.retailPriceTf.getText()))
-                    .withSupplierId(((Supplier)editProductView.supplierCob.getSelectedItem()).getId())
+                    .withRetailPrice(((Number) editProductView.retailPriceTf.getValue())
+                        .doubleValue())
+                    .withDiscount(((Number) editProductView.discountTf.getValue()).doubleValue())
+                    .withSupplierId(supplier.get().getId())
                     .build());
-            
+
             productRepository.update(newProduct);
             rootView.showSuccessDialog("Product updated.");
             show(id);
-         } catch (InvalidFieldException ex) {
+        } catch (InvalidFieldException ex) {
             rootView.showErrorDialog(ex.getMessage());
-         }                                                       
+        }                                                       
     }
     
     /** Destroy (delete) category. */
@@ -174,6 +227,16 @@ public final class ProductController {
             index(originalParameter);
         } catch (InvalidFieldException ex) {
             rootView.showErrorDialog(ex.getMessage());
+        }
+    }
+
+    /** Choose image. */
+    public void chooseImage(final Consumer<String> renderer) {
+        final JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Images", "png", "jpg", "jpeg"));
+        final int returnValue = fileChooser.showOpenDialog(rootView.frame);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            renderer.accept(fileChooser.getSelectedFile().toPath().toString());
         }
     }
 }

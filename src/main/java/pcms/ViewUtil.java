@@ -5,10 +5,12 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.Format;
 import java.util.Arrays;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -18,6 +20,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -103,6 +106,26 @@ public final class ViewUtil {
         return pane;
     }
 
+    /** Create image pane. */
+    public static JPanel createImagePane(
+            final JLabel imageLbl, final JLabel filenameLbl, final JButton addImageBtn) {
+
+        final JPanel pane = createContentPane();
+        pane.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+
+        final JPanel row = createHorizontalPane();
+
+        row.add(addImageBtn);
+        row.add(Box.createRigidArea(new Dimension(10, 0)));
+        row.add(filenameLbl);
+
+        pane.add(imageLbl);
+        pane.add(Box.createRigidArea(new Dimension(0, 10)));
+        pane.add(row);
+
+        return pane;
+    }
+
     /** Create key-value pane. */
     public static JPanel createKeyValuePane(final String[] keys, final JComponent[] values) {
         assert keys.length == values.length;
@@ -122,7 +145,9 @@ public final class ViewUtil {
         final JLabel keyLbl = new JLabel(key);
         final Font f = keyLbl.getFont();
         keyLbl.setFont(f.deriveFont(f.getStyle() & ~Font.BOLD));
-        keyLbl.setMaximumSize(new Dimension(130, keyLbl.getPreferredSize().height));
+        keyLbl.setMaximumSize(new Dimension(130, 26));
+        keyLbl.setPreferredSize(new Dimension(130, 26));
+        keyLbl.setMinimumSize(new Dimension(130, 26));
         keyLbl.setAlignmentY(JLabel.TOP_ALIGNMENT);
         keyLbl.setHorizontalAlignment(JLabel.RIGHT);
 
@@ -146,15 +171,17 @@ public final class ViewUtil {
         assert components.length == widths.length;
 
         final JPanel row = createHorizontalPane();
-        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
 
+        int maxPreferredHeight = 30;
         for (int i = 0; i < components.length; i++) {
             final JComponent c = components[i];
+            maxPreferredHeight = Math.max(maxPreferredHeight, c.getPreferredSize().height);
             c.setMaximumSize(new Dimension(widths[i], c.getMaximumSize().height));
             c.setPreferredSize(new Dimension(widths[i], c.getPreferredSize().height));
             row.add(c);
             row.add(Box.createRigidArea(new Dimension(10, 0)));
         }
+        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, maxPreferredHeight));
         row.add(Box.createRigidArea(new Dimension(0, 30)));
 
         return row;
@@ -183,23 +210,49 @@ public final class ViewUtil {
         return lbl;
     }
     
-    /** Create icon label. */ 
-    public static JLabel createIconLabel(final String s){
-        try {
-            BufferedImage myPicture = ImageIO.read(new File(s));
-            JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-            return picLabel;
-        } catch (IOException ex){}
-        return new JLabel();
+    /** Create thumbnail label. */ 
+    public static JLabel createThumbnailLabel(final String s) {
+        final JLabel thumbnailLbl = createImageLabel(80, 45);
+        thumbnailLbl.setIcon(createImageIcon(s, 80, 45));
+        return thumbnailLbl;
     }
     
     /** Create full image label. */ 
-    public static ImageIcon createFullImageIcon(final String s){
+    public static JLabel createFullImageLabel() {
+        return createImageLabel(320, 180);
+    }
+
+    /** Create image label. */ 
+    public static JLabel createImageLabel(final int w, final int h) {
+        final JLabel imageLbl = new JLabel();
+        imageLbl.setMaximumSize(new Dimension(w, h));
+        imageLbl.setPreferredSize(new Dimension(w, h));
+        imageLbl.setBorder(BorderFactory.createLineBorder(new Color(0.6f, 0.6f, 0.6f)));
+        imageLbl.setHorizontalAlignment(JLabel.CENTER);
+        return imageLbl;
+    }
+
+    /** Create full image icon. */ 
+    public static ImageIcon createFullImageIcon(final String s) {
+        return createImageIcon(s, 320, 180);
+    }
+
+    /** Create image icon. */
+    public static ImageIcon createImageIcon(final String s, final int w, final int h) {
+        ImageIcon icon = new ImageIcon();
+
         try {
-            BufferedImage myPicture = ImageIO.read(new File(s));
-            return new ImageIcon(myPicture);
-        } catch (IOException ex){}
-        return new ImageIcon();
+            final BufferedImage image = ImageIO.read(new File(s));
+            if ((double)(image.getWidth()) / image.getHeight() > (double)(w) / h) {
+                icon = new ImageIcon(image.getScaledInstance(w, -1, Image.SCALE_DEFAULT));
+            } else {
+                icon = new ImageIcon(image.getScaledInstance(-1, h, Image.SCALE_DEFAULT));
+            }
+        } catch (IOException ex) {
+            System.out.println("Cannot open image: " + s);
+        }
+
+        return icon;
     }
 
     /** Create text field. */
@@ -207,6 +260,17 @@ public final class ViewUtil {
         final JTextField tf = new JTextField(columns);
         tf.setMaximumSize(new Dimension(tf.getPreferredSize().width, 25));
         tf.setPreferredSize(new Dimension(tf.getPreferredSize().width, 25));
+        tf.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(0.6f, 0.6f, 0.6f)),
+                BorderFactory.createEmptyBorder(0, 7, 0, 7)));
+        return tf;
+    }
+
+    /** Create formatted text field. */
+    public static JFormattedTextField createFormattedTextField(final Format format) {
+        final JFormattedTextField tf = new JFormattedTextField(format);
+        tf.setMaximumSize(new Dimension(300, 25));
+        tf.setPreferredSize(new Dimension(300, 25));
         tf.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(0.6f, 0.6f, 0.6f)),
                 BorderFactory.createEmptyBorder(0, 7, 0, 7)));
@@ -244,13 +308,12 @@ public final class ViewUtil {
     }
     
     /** Create combo box. */
-    public static JComboBox createComboBox() {
-        final JComboBox cob = new JComboBox();
+    public static JComboBox<String> createComboBox() {
+        final JComboBox<String> cob = new JComboBox<>();
+        cob.setBackground(Color.WHITE);
         cob.setMaximumSize(new Dimension(300, 25));
         cob.setPreferredSize(new Dimension(cob.getPreferredSize().width, 25));
-        cob.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(0.6f, 0.6f, 0.6f)),
-                BorderFactory.createEmptyBorder(0, 7, 0, 7)));
+        cob.setBorder(BorderFactory.createLineBorder(new Color(0.6f, 0.6f, 0.6f)));
         return cob;
     }
 
@@ -274,6 +337,7 @@ public final class ViewUtil {
             final JComponent component, final int width, final int height) {
         final JScrollPane scrollPane = createScrollPane(component);
         scrollPane.setMaximumSize(new Dimension(width, height));
+        scrollPane.setPreferredSize(new Dimension(width, height));
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(0.6f, 0.6f, 0.6f)));
         return scrollPane;
     }

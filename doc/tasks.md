@@ -7,7 +7,7 @@
 - [x] Login record module
 - [x] Supplier module
 - [x] Category module
-- [ ] Product module
+- [x] Product module
 - [ ] Catalog module
 - [ ] Print to PDF
 - [ ] Role authorization

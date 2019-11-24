@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -156,7 +157,49 @@ public abstract class Repository<T extends Model> {
         try {
             Files.writeString(dataPath, s, StandardCharsets.UTF_8);
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            System.err.println("Failed to write to file: " + ex.getMessage());
+        }
+    }
+
+    /** Get image directory. */
+    protected Path getImageDir() {
+        final Path dataDir = dataPath.getParent();
+        final Path imageDir = dataDir == null
+                ? Path.of("product_images")
+                : dataDir.resolve("product_images");
+
+        try {
+            Files.createDirectories(imageDir);
+        } catch (IOException ex) {
+            System.err.println("Failed to create product_images directory: " + ex.getMessage());
+        }
+
+        return imageDir;
+    }
+
+    /** Copy image. */
+    protected String copyImage(final Path imageDir, final String imagePath, final String id) {
+        final Path source = Path.of(imagePath);
+        final Path filename = source.getFileName();
+        final String newFilename = String.join("-", id,
+                filename == null ? source.toString() : filename.toString());
+        final Path destination = imageDir.resolve(newFilename);
+
+        try {
+            Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ex) {
+            System.err.println("Failed to copy image: " + ex.getMessage());
+        }
+
+        return destination.toString();
+    }
+
+    /** Delete image. */
+    protected void deleteImage(final String image) {
+        try {
+            Files.deleteIfExists(Path.of(image));
+        } catch (IOException ex) {
+            System.err.println("Failed to delete image: " + ex.getMessage());
         }
     }
 }

@@ -2,6 +2,8 @@ package pcms; // NOPMD - Ok to have high number of imports
 
 import java.nio.file.Path;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import pcms.category.AddCategoryView;
 import pcms.category.CategoryController;
 import pcms.category.CategoryInfoView;
@@ -20,6 +22,7 @@ import pcms.menu.MenuController;
 import pcms.menu.MenuView;
 import pcms.product.AddProductView;
 import pcms.product.EditProductView;
+import pcms.product.Product;
 import pcms.product.ProductController;
 import pcms.product.ProductInfoView;
 import pcms.product.ProductListView;
@@ -60,6 +63,17 @@ public final class App {
         // Enable anti-aliasing
         System.setProperty("awt.useSystemAAFontSettings","on");
         System.setProperty("swing.aatext", "true");
+
+        // Set cross platform look and feel
+        final String errMsg = "Failed to set look and feel: ";
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (ClassNotFoundException 
+                | InstantiationException 
+                | IllegalAccessException 
+                | UnsupportedLookAndFeelException ex) {
+            System.err.println(errMsg + ex.getMessage());
+        }
 
         // Create session.
         session = new Session();

@@ -288,4 +288,14 @@ class ValidationUtilTest {
             ValidationUtil.notExists("zg", "Autumn", cache, Foo::getBar, "", Foo::getBaz);
         });
     }
+
+    /** Test notNegative. */
+    @Test
+    public void testNotNegative() {
+        ValidationUtil.notNegative("g1", 0.0);
+        ValidationUtil.notNegative("g2", 1.0);
+        assertThrows(InvalidFieldException.class, () -> {
+            ValidationUtil.notNegative("g3", -0.000_000_1);
+        });
+    }
 }

@@ -50,4 +50,14 @@ final class TestUtil {
         return String.format("%s should be 8 to 15 digits.", label);
     }
 
+    /** Negative error message. */
+    public static String negativeErrMsg(final String label) {
+        return String.format("%s cannot be negative.", label);
+    }
+
+    /** Record not found error message. */
+    public static String recordNotFoundErrMsg(final String id) {
+        return String.format("Record with ID %s not found.", id);
+    }
+
 }

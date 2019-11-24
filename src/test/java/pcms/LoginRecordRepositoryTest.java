@@ -81,7 +81,7 @@ class LoginRecordRepositoryTest {
                         new LoginRecord.Builder(newLoginRecord).withUserId("U00008").build());
             });
             assertEquals("id", ex.getLabel());
-            assertEquals("Record with ID U00008 not found.", ex.getMessage());
+            assertEquals(TestUtil.recordNotFoundErrMsg("U00008"), ex.getMessage());
             verify(userRepository).findWithId("U00008");
         } catch (IOException ex) {
             fail(ex);

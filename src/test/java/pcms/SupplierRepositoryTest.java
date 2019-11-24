@@ -63,33 +63,8 @@ class SupplierRepositoryTest {
                     String.join("", "7\n", CONTENT.substring(2), result.toRow(), "\n"),
                     Files.readString(filePath, StandardCharsets.UTF_8));
 
-            InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
-                supplierRepository.insert(
-                        new Supplier.Builder(newSupplier).withName("").build());
-            });
-            assertEquals("name", ex.getLabel()); // NOPMD - Ok to duplicate literal
-            assertEquals(TestUtil.minLenErrMsg("Name", 1), ex.getMessage()); // NOPMD
+            doCommonValidations(supplierRepository, newSupplier);
 
-            ex = assertThrows(InvalidFieldException.class, () -> {
-                supplierRepository.insert(
-                        new Supplier.Builder(newSupplier).withEmail("").build());
-            });
-            assertEquals("email", ex.getLabel()); // NOPMD - Ok to duplicate literal
-            assertEquals(TestUtil.requiredErrMsg("Email"), ex.getMessage()); // NOPMD
-
-            ex = assertThrows(InvalidFieldException.class, () -> {
-                supplierRepository.insert(
-                        new Supplier.Builder(newSupplier).withEmail("hello@goodbye").build());
-            });
-            assertEquals("email", ex.getLabel());
-            assertEquals(TestUtil.emailFmtErrMsg("Email"), ex.getMessage());
-
-            ex = assertThrows(InvalidFieldException.class, () -> {
-                supplierRepository.insert(
-                        new Supplier.Builder(newSupplier).withPhone("123").build());
-            });
-            assertEquals("phone", ex.getLabel());
-            assertEquals(TestUtil.phoneFmtErrMsg("Phone"), ex.getMessage());
         } catch (IOException ex) {
             fail(ex);
         }
@@ -116,39 +91,14 @@ class SupplierRepositoryTest {
                     CONTENT.replace("JKL", "STU"),
                     Files.readString(filePath, StandardCharsets.UTF_8));
 
-            InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
+            final InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
                 supplierRepository.update(new Supplier.Builder().withId("S00007").build());
             });
             assertEquals("id", ex.getLabel());
             assertEquals(TestUtil.keyNotFoundErrMsg("ID"), ex.getMessage());
 
-            ex = assertThrows(InvalidFieldException.class, () -> {
-                supplierRepository.insert(
-                        new Supplier.Builder(newSupplier).withName("").build());
-            });
-            assertEquals("name", ex.getLabel()); // NOPMD
-            assertEquals(TestUtil.minLenErrMsg("Name", 1), ex.getMessage()); // NOPMD
+            doCommonValidations(supplierRepository, newSupplier);
 
-            ex = assertThrows(InvalidFieldException.class, () -> {
-                supplierRepository.insert(
-                        new Supplier.Builder(newSupplier).withEmail("").build());
-            });
-            assertEquals("email", ex.getLabel());
-            assertEquals(TestUtil.requiredErrMsg("Email"), ex.getMessage());
-
-            ex = assertThrows(InvalidFieldException.class, () -> {
-                supplierRepository.insert(
-                        new Supplier.Builder(newSupplier).withEmail("hello@goodbye").build());
-            });
-            assertEquals("email", ex.getLabel());
-            assertEquals(TestUtil.emailFmtErrMsg("Email"), ex.getMessage());
-
-            ex = assertThrows(InvalidFieldException.class, () -> {
-                supplierRepository.insert(
-                        new Supplier.Builder(newSupplier).withPhone("123").build());
-            });
-            assertEquals("phone", ex.getLabel());
-            assertEquals(TestUtil.phoneFmtErrMsg("Phone"), ex.getMessage());
         } catch (IOException ex) {
             fail(ex);
         }
@@ -176,5 +126,46 @@ class SupplierRepositoryTest {
         } catch (IOException ex) {
             fail(ex);
         }
+    }
+
+    /** Do common validations. */
+    private void doCommonValidations(
+            final SupplierRepository supplierRepository,
+            final Supplier newSupplier) {
+
+        InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
+            supplierRepository.insert(
+                    new Supplier.Builder(newSupplier).withName("").build());
+        });
+        assertEquals("name", ex.getLabel()); // NOPMD
+        assertEquals(TestUtil.minLenErrMsg("Name", 1), ex.getMessage()); // NOPMD
+
+        ex = assertThrows(InvalidFieldException.class, () -> {
+            supplierRepository.insert(
+                    new Supplier.Builder(newSupplier).withName("ABC Holdings Sdn Bhd").build());
+        });
+        assertEquals("name", ex.getLabel()); // NOPMD
+        assertEquals(TestUtil.duplicateErrMsg("Name"), ex.getMessage()); // NOPMD
+
+        ex = assertThrows(InvalidFieldException.class, () -> {
+            supplierRepository.insert(
+                    new Supplier.Builder(newSupplier).withName("h").withEmail("").build());
+        });
+        assertEquals("email", ex.getLabel());
+        assertEquals(TestUtil.requiredErrMsg("Email"), ex.getMessage());
+
+        ex = assertThrows(InvalidFieldException.class, () -> {
+            supplierRepository.insert(new Supplier.Builder(newSupplier).withName("h")
+                    .withEmail("hello@goodbye").build());
+        });
+        assertEquals("email", ex.getLabel());
+        assertEquals(TestUtil.emailFmtErrMsg("Email"), ex.getMessage());
+
+        ex = assertThrows(InvalidFieldException.class, () -> {
+            supplierRepository.insert(
+                    new Supplier.Builder(newSupplier).withName("h").withPhone("123").build());
+        });
+        assertEquals("phone", ex.getLabel());
+        assertEquals(TestUtil.phoneFmtErrMsg("Phone"), ex.getMessage());
     }
 }

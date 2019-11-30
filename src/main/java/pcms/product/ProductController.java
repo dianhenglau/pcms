@@ -21,9 +21,9 @@ public final class ProductController {
     private final Session session; // NOPMD - temporaray
     /** Product repository. */
     private final ProductRepository productRepository;
-    /** Product repository. */
+    /** Category repository. */
     private final CategoryRepository categoryRepository;
-    /** Product repository. */
+    /** Supplier repository. */
     private final SupplierRepository supplierRepository;
 
     /** Product list view. */

@@ -4,6 +4,13 @@ import java.nio.file.Path;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import pcms.catalog.AddCatalogView;
+import pcms.catalog.Catalog;
+import pcms.catalog.CatalogController;
+import pcms.catalog.CatalogInfoView;
+import pcms.catalog.CatalogListView;
+import pcms.catalog.CatalogRepository;
+import pcms.catalog.EditCatalogView;
 import pcms.category.AddCategoryView;
 import pcms.category.CategoryController;
 import pcms.category.CategoryInfoView;
@@ -57,6 +64,8 @@ public final class App {
     private final SupplierRepository supplierRepository;
     /** Product repository. */
     private final ProductRepository productRepository;
+    /** Product repository. */
+    private final CatalogRepository catalogRepository;
 
     /** Construct app. */
     public App() {
@@ -93,6 +102,11 @@ public final class App {
                 getDataPath("products.csv"), categoryRepository, supplierRepository);
         Product.setCategoryRepository(categoryRepository);
         Product.setSupplierRepository(supplierRepository);
+        
+        catalogRepository = new CatalogRepository(
+                getDataPath("catalog.csv"), userRepository, productRepository);
+        Catalog.setUserRepository(userRepository);
+        Catalog.setProductRepository(productRepository);
     }
 
     /** Run app. */
@@ -117,11 +131,19 @@ public final class App {
         final SupplierInfoView supplierInfoView = new SupplierInfoView();
         final AddSupplierView addSupplierView = new AddSupplierView();
         final EditSupplierView editSupplierView = new EditSupplierView();
+        
         final ProductListView productListView = new ProductListView();
         final ProductInfoView productInfoView = new ProductInfoView();
         final AddProductView addProductView = new AddProductView();
         final EditProductView editProductView = new EditProductView();
+        
+        final CatalogListView catalogListView = new CatalogListView();
+        final CatalogInfoView catalogInfoView = new CatalogInfoView();
+        final AddCatalogView addCatalogView = new AddCatalogView();
+        final EditCatalogView editCatalogView = new EditCatalogView();
+        
         final DashboardView dashboardView = new DashboardView();
+        
         final MenuView menuView = new MenuView();
         final ContentView contentView = new ContentView(
                 userListView,
@@ -143,6 +165,10 @@ public final class App {
                 productInfoView,
                 addProductView,
                 editProductView,
+                catalogListView,
+                catalogInfoView,
+                addCatalogView,
+                editCatalogView,
                 dashboardView);
 
         final MainView mainView = new MainView(menuView, contentView);
@@ -196,6 +222,16 @@ public final class App {
                 addProductView,
                 editProductView,
                 rootView);
+        final CatalogController catalogController = new CatalogController(
+                session,
+                catalogRepository,
+                userRepository,
+                productRepository,
+                catalogListView,
+                catalogInfoView,
+                addCatalogView,
+                editCatalogView,
+                rootView);
         final DashboardController dashboardController = new DashboardController(
                 session,
                 supplierRepository,
@@ -222,6 +258,7 @@ public final class App {
         categoryController.init();
         supplierController.init();
         productController.init();
+        catalogController.init();
         dashboardController.init(
                 supplierController, 
                 loginRecordController,
@@ -235,6 +272,7 @@ public final class App {
                 categoryController,
                 supplierController,
                 productController,
+                catalogController,
                 dashboardController);
 
         loginController.init(dashboardController);

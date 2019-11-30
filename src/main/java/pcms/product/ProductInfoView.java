@@ -28,7 +28,7 @@ public final class ProductInfoView {
     /** Quantity label. */
     private final JLabel quantityLbl;
     /** Description label. */
-    private final JTextArea descriptionLbl;
+    private final JTextArea descriptionTa;
     /** Retail Price label. */
     private final JLabel retailPriceLbl;
     /** Discount label. */
@@ -48,7 +48,7 @@ public final class ProductInfoView {
         brandLbl = ViewUtil.createValueLabel();
         categoryLbl = ViewUtil.createValueLabel();
         quantityLbl = ViewUtil.createValueLabel();
-        descriptionLbl = ViewUtil.createViewOnlyTextArea();
+        descriptionTa = ViewUtil.createViewOnlyTextArea();
         retailPriceLbl = ViewUtil.createValueLabel();
         discountLbl = ViewUtil.createValueLabel();
         supplierLbl = ViewUtil.createValueLabel();
@@ -58,7 +58,7 @@ public final class ProductInfoView {
                 "Quantity", "Description", "Retail Price", "Discount", "Supplier"};
         final JComponent[] components = {
                 idLbl, imageLbl, nameLbl, brandLbl, categoryLbl,
-                quantityLbl, descriptionLbl, retailPriceLbl, discountLbl, supplierLbl};
+                quantityLbl, descriptionTa, retailPriceLbl, discountLbl, supplierLbl};
 
         pane.add(ViewUtil.createButtonControlPane(backBtn, editBtn));
         pane.add(ViewUtil.createKeyValuePane(labels, components));
@@ -73,7 +73,7 @@ public final class ProductInfoView {
         brandLbl.setText(product.getBrand());
         categoryLbl.setText(product.getCategory().getName());
         quantityLbl.setText(Integer.toString(product.getQuantity()));
-        descriptionLbl.setText(product.getDescription());
+        descriptionTa.setText(product.getDescription());
         retailPriceLbl.setText(String.format("%.2f", product.getRetailPrice()));
         discountLbl.setText(String.format("%.0f%%", product.getDiscount()));
         supplierLbl.setText(product.getSupplier().getName());

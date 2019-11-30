@@ -2,6 +2,10 @@ package pcms;
 
 import java.awt.CardLayout;
 import javax.swing.JPanel;
+import pcms.catalog.AddCatalogView;
+import pcms.catalog.CatalogInfoView;
+import pcms.catalog.CatalogListView;
+import pcms.catalog.EditCatalogView;
 import pcms.category.AddCategoryView;
 import pcms.category.CategoryInfoView;
 import pcms.category.CategoryListView;
@@ -33,6 +37,7 @@ public final class ContentView { // NOPMD - Ok to have many fields
         CATEGORY_LIST, CATEGORY_INFO, ADD_CATEGORY, EDIT_CATEGORY,
         SUPPLIER_LIST, SUPPLIER_INFO, ADD_SUPPLIER, EDIT_SUPPLIER,
         PRODUCT_LIST, PRODUCT_INFO, ADD_PRODUCT, EDIT_PRODUCT,
+        CATALOG_LIST, CATALOG_INFO, ADD_CATALOG, EDIT_CATALOG,
         DASHBOARD
     }
 
@@ -79,6 +84,15 @@ public final class ContentView { // NOPMD - Ok to have many fields
     public final AddProductView addProductView;
     /** Edit supplier view. */
     public final EditProductView editProductView;
+    
+    /** Supplier list view. */
+    public final CatalogListView catalogListView;
+    /** Supplier info view. */
+    public final CatalogInfoView catalogInfoView;
+    /** Add supplier view. */
+    public final AddCatalogView addCatalogView;
+    /** Edit supplier view. */
+    public final EditCatalogView editCatalogView;
 
     /** Dashboard view. */
     public final DashboardView dashboardView;
@@ -109,6 +123,10 @@ public final class ContentView { // NOPMD - Ok to have many fields
             final ProductInfoView productInfoView,
             final AddProductView addProductView,
             final EditProductView editProductView,
+            final CatalogListView catalogListView,
+            final CatalogInfoView catalogInfoView,
+            final AddCatalogView addCatalogView,
+            final EditCatalogView editCatalogView,
             final DashboardView dashboardView) {
 
         this.userListView = userListView;
@@ -130,6 +148,10 @@ public final class ContentView { // NOPMD - Ok to have many fields
         this.productInfoView = productInfoView;
         this.addProductView = addProductView;
         this.editProductView = editProductView;
+        this.catalogListView = catalogListView;
+        this.catalogInfoView = catalogInfoView;
+        this.addCatalogView = addCatalogView;
+        this.editCatalogView = editCatalogView;
         this.dashboardView = dashboardView;
 
         cardLayout = ViewUtil.createVariableSizeCardLayout();
@@ -154,6 +176,10 @@ public final class ContentView { // NOPMD - Ok to have many fields
         pane.add(productInfoView.pane, Views.PRODUCT_INFO.name());
         pane.add(addProductView.pane, Views.ADD_PRODUCT.name());
         pane.add(editProductView.pane, Views.EDIT_PRODUCT.name());
+        pane.add(catalogListView.pane, Views.CATALOG_LIST.name());
+        pane.add(catalogInfoView.pane, Views.CATALOG_INFO.name());
+        pane.add(addCatalogView.pane, Views.ADD_CATALOG.name());
+        pane.add(editCatalogView.pane, Views.EDIT_CATALOG.name());
         pane.add(dashboardView.pane, Views.DASHBOARD.name());
     }
 

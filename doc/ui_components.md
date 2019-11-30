@@ -271,8 +271,8 @@ Administrator only.
 
 - List of catalogs
     - ID (Reference number)
-    - Title
     - Banner
+    - Title
     - Season start date
     - Season end date
     - Created on

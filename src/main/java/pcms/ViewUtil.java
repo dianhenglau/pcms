@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -124,6 +125,19 @@ public final class ViewUtil {
         pane.add(row);
 
         return pane;
+    }
+    
+    /** Create select date pane. */
+    public static JPanel createSelectDatePane(
+        final JLabel dateLbl, final JLabel displayDateLbl, final JButton selectDateBtn) {
+        
+        final JPanel row = createHorizontalPane();
+        
+        row.add(dateLbl);
+        row.add(selectDateBtn);
+        row.add(displayDateLbl);
+
+        return row;
     }
 
     /** Create key-value pane. */

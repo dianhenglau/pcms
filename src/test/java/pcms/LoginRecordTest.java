@@ -104,4 +104,11 @@ class LoginRecordTest {
         final LoginRecord loginRecord = new LoginRecord.Builder().build();
         assertSame(user, loginRecord.getUser());
     }
+
+    /** Test enum's toString. */
+    @Test
+    public void testEnumString() {
+        assertEquals("Login", LoginRecord.Action.LOGIN.toString());
+        assertEquals("Logout", LoginRecord.Action.LOGOUT.toString());
+    }
 }

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import pcms.category.Category;
 import pcms.category.CategoryRepository;
@@ -146,4 +147,23 @@ class CategoryRepositoryTest {
         }
     }
 
+    /** Test find with name. */
+    @Test
+    public void testWithFindWithName() {
+        try {
+            final Path filePath = TestUtil.getDataPath("categories_find_with_name.csv");
+            Files.writeString(filePath, CONTENT, StandardCharsets.UTF_8);
+
+            final CategoryRepository categoryRepository = new CategoryRepository(filePath);
+            assertEquals(5, categoryRepository.all().size());
+
+            final Optional<Category> category = categoryRepository.findWithName("Home Appliances");
+            assertFalse(category.isEmpty());
+            assertEquals("Home Appliances", category.get().getName());
+
+            assertTrue(categoryRepository.findWithName("Toys").isEmpty());
+        } catch (IOException ex) {
+            fail(ex);
+        }
+    }
 }

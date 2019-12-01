@@ -89,7 +89,7 @@ public final class ProductListView {
                 ViewUtil.createUnboldLabel(product.getCategory().getName()),
                 ViewUtil.createUnboldLabel(Integer.toString(product.getQuantity())),
                 ViewUtil.createUnboldLabel(String.format("%.2f", product.getRetailPrice())),
-                ViewUtil.createUnboldLabel(String.format("%.0f%%", product.getDiscount())),
+                ViewUtil.createUnboldLabel(String.format("%.0f%%", product.getDiscount() * 100)),
                 ViewUtil.createUnboldLabel(product.getSupplier().getName()),
                 actionPane};
 

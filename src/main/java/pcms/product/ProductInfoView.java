@@ -75,7 +75,7 @@ public final class ProductInfoView {
         quantityLbl.setText(Integer.toString(product.getQuantity()));
         descriptionTa.setText(product.getDescription());
         retailPriceLbl.setText(String.format("%.2f", product.getRetailPrice()));
-        discountLbl.setText(String.format("%.0f%%", product.getDiscount()));
+        discountLbl.setText(String.format("%.0f%%", product.getDiscount() * 100));
         supplierLbl.setText(product.getSupplier().getName());
     }
 }

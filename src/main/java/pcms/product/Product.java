@@ -35,7 +35,7 @@ public final class Product implements Model {
     private final String description;
     /** Retail Price. */
     private final double retailPrice;
-    /** Discount. In percentage, e.g. 30. */
+    /** Discount. E.g. 0.3 for 30% discount. */
     private final double discount;
     /** Supplier ID. */
     private final String supplierId;

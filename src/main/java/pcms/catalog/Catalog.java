@@ -1,15 +1,16 @@
 package pcms.catalog;
 
-import java.time.Instant;
 import static pcms.CsvParsingUtil.decode;
 import static pcms.CsvParsingUtil.encode;
 import static pcms.CsvParsingUtil.splitIntoCols;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import pcms.Model;
-import pcms.ProductDiscount;
 import pcms.product.Product;
 import pcms.product.ProductRepository;
 import pcms.user.User;
@@ -32,9 +33,9 @@ public final class Catalog implements Model {
     /** Description. */
     private final String description;
     /** Season Start Date. */
-    private final String seasonStartDate;
+    private final LocalDate seasonStartDate;
     /** Season End Date. */
-    private final String seasonEndDate;
+    private final LocalDate seasonEndDate;
     /** Product ID - Discount Pairs. */
     private final List<ProductDiscount> productDiscounts;
     /** Created Date and Time. */
@@ -53,13 +54,12 @@ public final class Catalog implements Model {
         this.productDiscounts = builder.productDiscounts;
         this.timestamp = builder.timestamp;
         this.userId = builder.userId;
-        
     }
 
     /** Construct from row. */
     public Catalog(final String row) {
         final List<String> fields = splitIntoCols(row);
-        if (fields.size() != 10) {
+        if (fields.size() != 9) {
             throw new IllegalArgumentException("Fields count incorrect.");
         }
 
@@ -67,15 +67,19 @@ public final class Catalog implements Model {
         title = decode(fields.get(1));
         banner = decode(fields.get(2));
         description = decode(fields.get(3));
-        seasonStartDate = fields.get(4);
-        seasonEndDate = fields.get(5);
+        seasonStartDate = LocalDate.parse(fields.get(4), DateTimeFormatter.ISO_LOCAL_DATE);
+        seasonEndDate = LocalDate.parse(fields.get(5), DateTimeFormatter.ISO_LOCAL_DATE);
         
-        productDiscounts = new ArrayList<ProductDiscount>();
+        productDiscounts = new ArrayList<>();
         
-        final String[] array = decode(fields.get(6)).split(",");
-        for(String pair: array){
-            final String[] productPair = pair.split(":");
-            productDiscounts.add(new ProductDiscount(productPair[0], Double.parseDouble(productPair[1])));
+        final String column = decode(fields.get(6));
+        if (!column.isEmpty()) {
+            final String[] array = column.split(",");
+            for (final String pair: array) {
+                final String[] productPair = pair.split(":");
+                productDiscounts.add(new ProductDiscount(
+                        productPair[0], Double.parseDouble(productPair[1])));
+            }
         }
         
         timestamp = Instant.parse(fields.get(7));
@@ -86,9 +90,9 @@ public final class Catalog implements Model {
     @Override
     public String toRow() {
         
-        final ArrayList<String> array = new ArrayList(productDiscounts.size());
-        for(ProductDiscount p: productDiscounts){
-            array.add(p.getProductId()+":"+p.getDiscount());
+        final ArrayList<String> array = new ArrayList<>(productDiscounts.size());
+        for (final ProductDiscount p: productDiscounts) {
+            array.add(p.getProductId() + ":" + p.getDiscount());
         }
         
         return String.join(
@@ -97,16 +101,16 @@ public final class Catalog implements Model {
                 encode(title),
                 encode(banner),
                 encode(description),
-                seasonStartDate,
-                seasonEndDate,
+                seasonStartDate.toString(),
+                seasonEndDate.toString(),
                 encode(String.join(",", array)),
                 timestamp.toString(),
                 userId);
                
     }
     
-    @Override
     /** Get id. */
+    @Override
     public String getId() {
         return id;
     }
@@ -127,22 +131,22 @@ public final class Catalog implements Model {
     }
     
     /** Get season start date. */
-    public String getSeasonStartDate() {
+    public LocalDate getSeasonStartDate() {
         return seasonStartDate;
     }
     
     /** Get season end date. */
-    public String getSeasonEndDate() {
+    public LocalDate getSeasonEndDate() {
         return seasonEndDate;
     }
     
     /** Get list of product discount pairs. */
-    public List<ProductDiscount> getProductDiscount() {
+    public List<ProductDiscount> getProductDiscounts() {
         return productDiscounts;
     }
     
     /** Get timestamp. */
-    public Instant getTimestamp(){
+    public Instant getTimestamp() {
         return timestamp;
     }
     
@@ -152,7 +156,7 @@ public final class Catalog implements Model {
     }
     
     /** Get user. */
-    public User getUser(){
+    public User getUser() {
         return userRepository.get().findWithId(userId).get();
     }
     
@@ -162,7 +166,7 @@ public final class Catalog implements Model {
     }
     
     /** Get product. */
-    public Product getProduct(){
+    public Product getProduct() {
         return productRepository.get().findWithId(userId).get();
     }
     
@@ -182,9 +186,9 @@ public final class Catalog implements Model {
         /** Description. */
         private String description;
         /** Season Start Date. */
-        private String seasonStartDate;
+        private LocalDate seasonStartDate;
         /** Season End Date. */
-        private String seasonEndDate;
+        private LocalDate seasonEndDate;
         /** Product ID - Discount Pairs. */
         private List<ProductDiscount> productDiscounts;
         /** Created Date and Time. */
@@ -199,8 +203,8 @@ public final class Catalog implements Model {
             title = "";
             banner = "";
             description = "";
-            seasonStartDate = "";
-            seasonEndDate = "";
+            seasonStartDate = LocalDate.ofEpochDay(0);
+            seasonEndDate = LocalDate.ofEpochDay(0);
             productDiscounts = new ArrayList<>();
             timestamp = Instant.ofEpochSecond(0);
             userId = "";         
@@ -245,19 +249,19 @@ public final class Catalog implements Model {
         }
 
         /** Set season start date. */
-        public Builder withSeasonStartDate(final String seasonStartDate) {
+        public Builder withSeasonStartDate(final LocalDate seasonStartDate) {
             this.seasonStartDate = seasonStartDate;
             return this;
         }
 
         /** Set season end date. */
-        public Builder withSeasonEndDate(final String seasonEndDate) {
+        public Builder withSeasonEndDate(final LocalDate seasonEndDate) {
             this.seasonEndDate = seasonEndDate;
             return this;
         }
 
         /** Set list of product discount pairs. */
-        public Builder withProductDiscount(final List<ProductDiscount> productDiscounts) {
+        public Builder withProductDiscounts(final List<ProductDiscount> productDiscounts) {
             this.productDiscounts = productDiscounts;
             return this;
         }

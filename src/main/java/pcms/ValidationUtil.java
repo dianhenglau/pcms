@@ -1,5 +1,6 @@
 package pcms;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -124,6 +125,15 @@ public final class ValidationUtil {
             throw new InvalidFieldException(label, capitalize(label) + " cannot be negative.");
         }
         return num;
+    }
+
+    /** Make sure d1 is less than or equals to d2. */
+    public static void validDateRange(final String label, final LocalDate d1, final LocalDate d2) {
+        if (d1.compareTo(d2) > 0) {
+            // CHECKSTYLE:OFF
+            throw new InvalidFieldException(label, capitalize(label) + " has incorrect range. The start date should be before or equal to end date.");
+            // CHECKSTYLE:ON
+        }
     }
 
     private static String capitalize(final String x) {

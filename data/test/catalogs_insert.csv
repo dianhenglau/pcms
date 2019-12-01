@@ -1,0 +1,7 @@
+7
+G00001,Chinese New Year,data/test/catalog_images/catalog_001.jpg,Happy Chinese New Year!,2019-01-01,2019-01-10,"P003:30.0,P004:40.0,P005:50.0",1970-01-01T00:00:01Z,U001
+G00002,Good Friday,data/test/catalog_images/catalog_002.jpg,Happy Good Friday!,2019-02-01,2019-02-10,"P003:30.0,P004:40.0,P005:50.0",1970-01-01T00:00:01Z,U001
+G00003,Wesak Day,data/test/catalog_images/catalog_003.jpg,Happy Wesak Day!,2019-03-01,2019-03-10,"P003:30.0,P004:40.0,P005:50.0",1970-01-01T00:00:01Z,U001
+G00004,Hari Raya Aidilfitri,data/test/catalog_images/catalog_004.jpg,Happy Hari Raya Aidilfitri!,2019-04-01,2019-04-10,"P003:30.0,P004:40.0,P005:50.0",1970-01-01T00:00:01Z,U001
+G00005,Deepavali,data/test/catalog_images/catalog_005.jpg,Happy Deepavali!,2019-05-01,2019-05-10,"P003:30.0,P004:40.0,P005:50.0",1970-01-01T00:00:01Z,U001
+G00006,Merdeka Day,data/test/catalog_images/G00006-image6.jpg,Happy Merdeka Day!,2019-06-01,2019-06-10,"P003:30.0,P004:40.0,P005:50.0",1970-01-01T00:00:01Z,U001

@@ -60,4 +60,11 @@ final class TestUtil {
         return String.format("Record with ID %s not found.", id);
     }
 
+    /** Record not found error message. */
+    public static String dateRangeErrMsg(final String label) {
+        // CHECKSTYLE:OFF
+        return String.format("%s has incorrect range. The start date should be before or equal to end date.", label);
+        // CHECKSTYLE:ON
+    }
+
 }

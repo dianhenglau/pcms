@@ -21,7 +21,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -112,7 +111,7 @@ public final class ViewUtil {
             final JLabel imageLbl, final JLabel filenameLbl, final JButton addImageBtn) {
 
         final JPanel pane = createContentPane();
-        pane.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+        pane.setMaximumSize(new Dimension(600, 220));
 
         final JPanel row = createHorizontalPane();
 
@@ -129,12 +128,12 @@ public final class ViewUtil {
     
     /** Create select date pane. */
     public static JPanel createSelectDatePane(
-        final JLabel dateLbl, final JLabel displayDateLbl, final JButton selectDateBtn) {
+            final JLabel displayDateLbl, final JButton selectDateBtn) {
         
         final JPanel row = createHorizontalPane();
         
-        row.add(dateLbl);
         row.add(selectDateBtn);
+        row.add(Box.createRigidArea(new Dimension(10, 0)));
         row.add(displayDateLbl);
 
         return row;
@@ -343,6 +342,7 @@ public final class ViewUtil {
     public static JScrollPane createScrollPane(final JComponent component) {
         final JScrollPane scrollPane = new JScrollPane(component);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(15);
         return scrollPane;
     }
 

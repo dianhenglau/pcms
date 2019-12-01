@@ -44,6 +44,8 @@ dependencies {
 
     // To use mockito
     testImplementation("org.mockito:mockito-junit-jupiter:3.1.0")
+
+    implementation("com.itextpdf:itext7-core:7.1.8")
 }
 
 application {

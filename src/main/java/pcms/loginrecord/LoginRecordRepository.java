@@ -40,7 +40,6 @@ public final class LoginRecordRepository extends Repository<LoginRecord> {
     /** Should not be called. */
     @Override
     public LoginRecord update(final LoginRecord loginRecord) {
-        // Empty
-        return new LoginRecord.Builder().build();
+        throw new UnsupportedOperationException("Not supported");
     }
 }

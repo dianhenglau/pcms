@@ -1,5 +1,25 @@
 package pcms.catalog;
 
+import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.property.HorizontalAlignment;
+import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.UnitValue;
+import com.itextpdf.layout.property.VerticalAlignment;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
@@ -18,6 +40,7 @@ import pcms.InvalidFieldException;
 import pcms.RootView;
 import pcms.Session;
 import pcms.ValidationUtil;
+import pcms.product.Product;
 import pcms.product.ProductRepository;
 import pcms.user.UserRepository;
 
@@ -72,6 +95,7 @@ public final class CatalogController {
         catalogListView.addBtn.addActionListener(e -> create());
         catalogInfoView.editBtn.addActionListener(e -> edit(e.getActionCommand()));
         catalogInfoView.backBtn.addActionListener(e -> index(catalogListView.searchTf.getText()));
+        catalogInfoView.pdfBtn.addActionListener(e -> createPdf(e.getActionCommand()));
         addCatalogView.saveBtn.addActionListener(e -> store());
         addCatalogView.cancelBtn.addActionListener(e -> index(""));
         addCatalogView.bannerBtn.addActionListener(e -> chooseImage(addCatalogView::renderImage));
@@ -247,5 +271,118 @@ public final class CatalogController {
     public void chooseDate(final Consumer<String> renderer) {
         final JFrame dateChooser = new JFrame();
         renderer.accept(new DatePicker(dateChooser).setPickedDate());
+    }
+    
+    /** Generate catalog pdf. */
+    public void createPdf(final String id) {
+        try {
+            final Catalog catalog = ValidationUtil.recordExists(catalogRepository, id);
+            try{
+                /** Set pdf file path. */
+                final String dest = "data/main/catalog_pdf/"
+                        + catalog.getTitle()
+                        + "_"
+                        + catalog.getSeasonStartDate().toString().substring(0,4)
+                        + ".pdf";
+                File file = new File(dest);
+                file.getParentFile().mkdirs();
+
+                /** Initialize PDF document. */
+                PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
+                /** Set default font. */
+                try (Document doc = new Document(pdf)) {
+                    /** Set default font. */
+                    PdfFont norm = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
+                    PdfFont bold = PdfFontFactory.createFont(StandardFonts.TIMES_BOLD);
+                    
+                    /** Display catalog info. */
+                    Table infoTable = new Table(UnitValue.createPercentArray(new float[]{2,5}), true);
+                    
+                    infoTable.addCell(new Cell()
+                            .add(new Image(ImageDataFactory.create(catalog.getBanner()))
+                                    .setHeight(100)
+                                    .setHorizontalAlignment(HorizontalAlignment.CENTER))
+                            .setBorder(Border.NO_BORDER));
+                    
+                    infoTable.addCell(new Cell()
+                            .add(new Paragraph("Price List of "
+                                    + catalog.getTitle()
+                                    + " Sales "
+                                    + catalog.getSeasonStartDate().toString().substring(0,4)
+                                    + "\n"
+                                    + "Effective on: "
+                                    + catalog.getSeasonStartDate().toString()
+                                    + "-"
+                                    + catalog.getSeasonEndDate().toString())
+                                    .setFont(norm))
+                            .setTextAlignment(TextAlignment.CENTER)
+                            .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                            .setBorder(Border.NO_BORDER)
+                            .setKeepTogether(true));
+                    
+                    doc.add(infoTable);       
+                    doc.add(new Paragraph(""));
+                    
+                    /** Display product info */
+                    Table productTable = new Table(UnitValue.createPercentArray(new float[]{1,1,4,1,1,1}), true);
+                    
+                    /** Add header to table. */
+                    final String[] header = {"Product ID", "Product Image", "Product\nName", "Retail Price", "Special Discount", "Discount Price"};
+                    for (String i : header) {
+                        productTable.addHeaderCell(new Cell()
+                                .setKeepTogether(true)
+                                .add(new Paragraph(new Text(i).setFont(bold)))
+                                .setTextAlignment(TextAlignment.CENTER)
+                                .setVerticalAlignment(VerticalAlignment.MIDDLE));
+                    }
+                    
+                    doc.add(productTable);
+                    
+                    /** Add product to table. */
+                    for (final ProductDiscount p: catalog.getProductDiscounts()) {
+                        final Product product = p.getProduct().get();
+                        
+                        productTable.addCell(new Cell()
+                                .add(new Paragraph(product.getId()).setFont(norm))
+                                .setTextAlignment(TextAlignment.CENTER)
+                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .setKeepTogether(true));
+                        productTable.addCell(new Image(ImageDataFactory.create(product.getImage()))
+                                .setAutoScale(true));
+                        productTable.addCell(new Cell()
+                                .add(new Paragraph(product.getName()).setFont(norm))
+                                .setTextAlignment(TextAlignment.CENTER)
+                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .setKeepTogether(true));
+                        productTable.addCell(new Cell()
+                                .add(new Paragraph(String.format("%.2f", product.getRetailPrice())).setFont(norm))
+                                .setTextAlignment(TextAlignment.CENTER)
+                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .setKeepTogether(true));
+                        productTable.addCell(new Cell()
+                                .add(new Paragraph(String.format("%.0f%%", p.getDiscount() * 100)).setFont(norm))
+                                .setTextAlignment(TextAlignment.CENTER)
+                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .setKeepTogether(true));
+                        productTable.addCell(new Cell()
+                                .add(new Paragraph(String.format("%.2f", (1 - p.getDiscount()) * product.getRetailPrice())).setFont(norm))
+                                .setTextAlignment(TextAlignment.CENTER)
+                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .setKeepTogether(true));
+                        productTable.flush();
+                        
+                    }
+                    productTable.complete();
+                    doc.close();
+                    rootView.showSuccessDialog("PDF created.");
+                }
+
+            } catch (IOException ex) {
+                Logger.getLogger(CatalogController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (InvalidFieldException ex) {
+            rootView.showErrorDialog(ex.getMessage());
+        }
+        
     }
 }

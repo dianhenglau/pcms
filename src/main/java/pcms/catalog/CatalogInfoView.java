@@ -27,6 +27,8 @@ public final class CatalogInfoView {
     public final JButton editBtn;
     /** Back button. */
     public final JButton backBtn;
+    /** PDF button. */
+    public final JButton pdfBtn;
     /** ID label. */
     private final JLabel idLbl;
     /** Banner label. */
@@ -52,6 +54,7 @@ public final class CatalogInfoView {
 
         editBtn = new JButton("Edit");
         backBtn = new JButton("Back");
+        pdfBtn = new JButton("Generate PDF");
         idLbl = ViewUtil.createValueLabel();
         titleLbl = ViewUtil.createValueLabel();
         bannerLbl = ViewUtil.createFullImageLabel();
@@ -69,7 +72,7 @@ public final class CatalogInfoView {
                 idLbl, titleLbl, bannerLbl, descriptionTa, seasonStartDateLbl, seasonEndDateLbl, 
                 timestampLbl, userLbl, productsPane};
         
-        pane.add(ViewUtil.createButtonControlPane(backBtn, editBtn));
+        pane.add(ViewUtil.createButtonControlPane(backBtn, editBtn, pdfBtn));
         pane.add(ViewUtil.createKeyValuePane(labels, components));
         pane.add(Box.createRigidArea(new Dimension(0, 30)));
     }
@@ -81,6 +84,7 @@ public final class CatalogInfoView {
                 .withZone(ZoneId.systemDefault());
         
         editBtn.setActionCommand(catalog.getId());
+        pdfBtn.setActionCommand(catalog.getId());
         idLbl.setText(catalog.getId());
         bannerLbl.setIcon(ViewUtil.createFullImageIcon(catalog.getBanner()));
         titleLbl.setText(catalog.getTitle());

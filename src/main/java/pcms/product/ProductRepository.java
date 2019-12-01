@@ -24,7 +24,7 @@ public final class ProductRepository extends Repository<Product> {
         super(dataPath, id -> new Product.Builder().withId(id).build(), Product::new);
         this.categoryRepository = categoryRepository;
         this.supplierRepository = supplierRepository;
-        this.imageDir = getImageDir();
+        this.imageDir = getImageDir("product_images");
     }
 
     /** Insert product. */

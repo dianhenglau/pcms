@@ -1,9 +1,15 @@
 package pcms.catalog;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import pcms.ContentView;
@@ -21,10 +27,10 @@ public final class CatalogController {
     private final Session session; // NOPMD - temporaray
     /** Catalog repository. */
     private final CatalogRepository catalogRepository;
-//    /** User repository. */
-//    private final UserRepository userRepository;
-//    /** Product repository. */
-//    private final ProductRepository productRepository;
+    /** User repository. */
+    private final UserRepository userRepository; // NOPMD - temporary
+    /** Product repository. */
+    private final ProductRepository productRepository; // NOPMD - temporary
 
     /** Catalog list view. */
     private final CatalogListView catalogListView;
@@ -51,8 +57,8 @@ public final class CatalogController {
 
         this.session = session;
         this.catalogRepository = catalogRepository;
-//        this.userRepository = userRepository;
-//        this.productRepository = productRepository;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
         this.catalogListView = catalogListView;
         this.catalogInfoView = catalogInfoView;
         this.addCatalogView = addCatalogView;
@@ -69,13 +75,17 @@ public final class CatalogController {
         addCatalogView.saveBtn.addActionListener(e -> store());
         addCatalogView.cancelBtn.addActionListener(e -> index(""));
         addCatalogView.bannerBtn.addActionListener(e -> chooseImage(addCatalogView::renderImage));
-        addCatalogView.selectStartDateBtn.addActionListener(e -> chooseDate(addCatalogView::renderStartDate));
-        addCatalogView.selectEndDateBtn.addActionListener(e -> chooseDate(addCatalogView::renderEndDate));
+        addCatalogView.selectStartDateBtn.addActionListener(
+                e -> chooseDate(addCatalogView::renderStartDate));
+        addCatalogView.selectEndDateBtn.addActionListener(
+                e -> chooseDate(addCatalogView::renderEndDate));
         editCatalogView.saveBtn.addActionListener(e -> update(e.getActionCommand()));
         editCatalogView.cancelBtn.addActionListener(e -> show(e.getActionCommand()));
         editCatalogView.bannerBtn.addActionListener(e -> chooseImage(editCatalogView::renderImage));
-        editCatalogView.selectStartDateBtn.addActionListener(e -> chooseDate(editCatalogView::renderStartDate));
-        editCatalogView.selectEndDateBtn.addActionListener(e -> chooseDate(editCatalogView::renderEndDate));   
+        editCatalogView.selectStartDateBtn.addActionListener(
+                e -> chooseDate(editCatalogView::renderStartDate));
+        editCatalogView.selectEndDateBtn.addActionListener(
+                e -> chooseDate(editCatalogView::renderEndDate));   
     }
 
     /** List catalogs. */
@@ -106,18 +116,36 @@ public final class CatalogController {
     public void create() {
         rootView.render(RootView.Views.MAIN_VIEW);
         rootView.mainView.contentView.render(ContentView.Views.ADD_CATALOG);
-        addCatalogView.render();
+        addCatalogView.render(productRepository.all());
     }
 
     /** Store created catalog. */
     public void store() {
         try {
+            ValidationUtil.notEmpty("start date", addCatalogView.displayStartDateLbl.getText());
+            ValidationUtil.notEmpty("end date", addCatalogView.displayEndDateLbl.getText());
+
+            final List<ProductDiscount> productDiscounts = new ArrayList<>();
+            for (int i = 0; i < addCatalogView.selectedProductCbs.size(); i++) {
+                final JCheckBox cb = addCatalogView.selectedProductCbs.get(i);
+                final JFormattedTextField tf = addCatalogView.specialDiscountTfs.get(i);
+                if (cb.isSelected()) {
+                    productDiscounts.add(new ProductDiscount(cb.getActionCommand(), 
+                            ((Number) tf.getValue()).doubleValue()));
+                }
+            }
+
             final Catalog newCatalog = catalogRepository.insert(new Catalog.Builder()
                     .withTitle(addCatalogView.titleTf.getText())
                     .withBanner(addCatalogView.filenameLbl.getText())
                     .withDescription(addCatalogView.descriptionTa.getText())
-                    .withSeasonStartDate(addCatalogView.displayStartDateLbl.getText())
-                    .withSeasonEndDate(addCatalogView.displayEndDateLbl.getText())
+                    .withSeasonStartDate(LocalDate.parse(
+                            addCatalogView.displayStartDateLbl.getText(), 
+                            DateTimeFormatter.ISO_LOCAL_DATE))
+                    .withSeasonEndDate(LocalDate.parse(
+                            addCatalogView.displayEndDateLbl.getText(),
+                            DateTimeFormatter.ISO_LOCAL_DATE))
+                    .withProductDiscounts(productDiscounts)
                     .withTimestamp(Instant.now())
                     .withUserId(session.getUser().get().getId())
                     .build());
@@ -148,7 +176,7 @@ public final class CatalogController {
             final Catalog catalog = ValidationUtil.recordExists(catalogRepository, id);
             rootView.render(RootView.Views.MAIN_VIEW);
             rootView.mainView.contentView.render(ContentView.Views.EDIT_CATALOG);
-            editCatalogView.render(catalog);
+            editCatalogView.render(catalog, productRepository.all());
         } catch (InvalidFieldException ex) {
             rootView.showErrorDialog(ex.getMessage());
         }
@@ -157,19 +185,35 @@ public final class CatalogController {
     /** Update catalog info. */
     public void update(final String id) {
         try {
-
+            ValidationUtil.notEmpty("start date", editCatalogView.displayStartDateLbl.getText());
+            ValidationUtil.notEmpty("end date", editCatalogView.displayEndDateLbl.getText());
             final Catalog catalog = ValidationUtil.recordExists(catalogRepository, id);
-            final Catalog newCatalog = catalogRepository.update(new Catalog.Builder(catalog)
+
+            final List<ProductDiscount> productDiscounts = new ArrayList<>();
+            for (int i = 0; i < editCatalogView.selectedProductCbs.size(); i++) {
+                final JCheckBox cb = editCatalogView.selectedProductCbs.get(i);
+                final JFormattedTextField tf = editCatalogView.specialDiscountTfs.get(i);
+                if (cb.isSelected()) {
+                    productDiscounts.add(new ProductDiscount(cb.getActionCommand(), 
+                            ((Number) tf.getValue()).doubleValue()));
+                }
+            }
+
+            catalogRepository.update(new Catalog.Builder(catalog)
                     .withTitle(editCatalogView.titleTf.getText())
                     .withBanner(editCatalogView.filenameLbl.getText())
                     .withDescription(editCatalogView.descriptionTa.getText())
-                    .withSeasonStartDate(editCatalogView.displayStartDateLbl.getText())
-                    .withSeasonEndDate(editCatalogView.displayEndDateLbl.getText())
+                    .withSeasonStartDate(LocalDate.parse(
+                            editCatalogView.displayStartDateLbl.getText(),
+                            DateTimeFormatter.ISO_LOCAL_DATE))
+                    .withSeasonEndDate(LocalDate.parse(
+                            editCatalogView.displayEndDateLbl.getText(),
+                            DateTimeFormatter.ISO_LOCAL_DATE))
+                    .withProductDiscounts(productDiscounts)
                     .withTimestamp(Instant.now())
                     .withUserId(session.getUser().get().getId())
                     .build());
 
-            catalogRepository.update(newCatalog);
             rootView.showSuccessDialog("Catalog updated.");
             show(id);
         } catch (InvalidFieldException ex) {
@@ -200,8 +244,8 @@ public final class CatalogController {
     }
     
     /** Date picker. */
-    public void chooseDate(final Consumer<String> renderer){
+    public void chooseDate(final Consumer<String> renderer) {
         final JFrame dateChooser = new JFrame();
-        renderer.accept((new DatePicker(dateChooser).setPickedDate()));
+        renderer.accept(new DatePicker(dateChooser).setPickedDate());
     }
 }

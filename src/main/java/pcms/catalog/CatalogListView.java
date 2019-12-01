@@ -92,8 +92,8 @@ public final class CatalogListView {
                 ViewUtil.createUnboldLabel(catalog.getId()),
                 ViewUtil.createThumbnailLabel(catalog.getBanner()),
                 ViewUtil.createUnboldLabel(catalog.getTitle()),
-                ViewUtil.createUnboldLabel(catalog.getSeasonStartDate()),
-                ViewUtil.createUnboldLabel(catalog.getSeasonEndDate()),
+                ViewUtil.createUnboldLabel(catalog.getSeasonStartDate().toString()),
+                ViewUtil.createUnboldLabel(catalog.getSeasonEndDate().toString()),
                 ViewUtil.createUnboldLabel(formatter.format(catalog.getTimestamp())),
                 ViewUtil.createUnboldLabel(catalog.getUser().getUsername()),
                 actionPane};

@@ -1,11 +1,11 @@
-4
+5
 P00001,data/main/product_images/P00001-pillow2.jpeg,Jean Perry 100% Natural Cotton Pillow,Jean Perry,C00004,10,"100% Natural Cotton
 Nature's finest feel
 Soft yet supportive comfort
 Protection against dust-mites and other allergen particles
 Easy Maintenance - DRY cleaning Recommended, Sun & Air Frequently
 Size: 48cm x 74cm
-",84.8,0.0,S00001
+",84.8,0.1,S00001
 P00003,data/main/product_images/P00003-throw_pillow.jpg,"Rivet Mudcloth-Inspired Decorative Throw Pillow, 12"" x 24"", Navy",Rivet,C00004,20,"This throw pillow's bold color and mudcloth-inspired pattern will give your room a global modern twist. Skillfully sewn, high quality fabric and a plush pillow insert make this a cozy, resilient addition to a sofa or chair.
 Mudcloth-inspired patterns create a modern, global style
 Sewn in U.S. of durable cotton/polyester blend fabric
@@ -15,3 +15,6 @@ Removable plush fiber-filled insert included
 Pillow cover features hidden bottom zipper
 12"" x 24""
 Spot clean with damp white cloth and allow to air dry",39.99,0.1,S00001
+P00004,data/main/product_images/P00004-playstation_slim.jpg,PlayStation 4 Slim 1TB Console - Fortnite Bundle,Sony,C00004,10,"Fortnite Neo Versa PS4 bundle includes a jet black 1TB PlayStation 4 system, a matching DUALSHOCK4 wireless controller, and a code for exclusive Fortnite content
+
+Exclusive Fortnite content includes Epic Neo Versa Outfit*, Epic Neo Phrenzy Back Bling* and 2,000 V-Bucks",273.41,0.15,S00001

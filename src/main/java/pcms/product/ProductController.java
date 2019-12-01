@@ -120,7 +120,7 @@ public final class ProductController {
 
             final String supplierName = (String) addProductView.supplierCob.getSelectedItem();
             if (supplierName == null) {
-                throw new InvalidFieldException("category", "Category is required.");
+                throw new InvalidFieldException("supplier", "Supplier is required.");
             }
 
             final Optional<Supplier> supplier = supplierRepository.findWithName(supplierName);
@@ -197,7 +197,7 @@ public final class ProductController {
             }
 
             final Product product = ValidationUtil.recordExists(productRepository, id);
-            final Product newProduct = productRepository.update(new Product.Builder(product)
+            productRepository.update(new Product.Builder(product)
                     .withName(editProductView.nameTf.getText())
                     .withImage(editProductView.filenameLbl.getText())
                     .withBrand(editProductView.brandTf.getText())
@@ -210,12 +210,11 @@ public final class ProductController {
                     .withSupplierId(supplier.get().getId())
                     .build());
 
-            productRepository.update(newProduct);
             rootView.showSuccessDialog("Product updated.");
             show(id);
         } catch (InvalidFieldException ex) {
             rootView.showErrorDialog(ex.getMessage());
-        }                                                       
+        }
     }
     
     /** Destroy (delete) category. */

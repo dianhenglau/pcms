@@ -13,12 +13,18 @@
     <exclude name="JUnitAssertionsShouldIncludeMessage" />
     <exclude name="UseVarargs" />
   </rule>
+  <rule ref="category/java/bestpractices.xml/ForLoopVariableCount">
+    <properties>
+      <property name="maximumVariables" value="2" />
+    </properties>
+  </rule>
   <rule ref="category/java/codestyle.xml">
     <exclude name="AtLeastOneConstructor" />
     <exclude name="ShortClassName" />
     <exclude name="ShortMethodName" />
     <exclude name="ShortVariable" />
     <exclude name="LongVariable" />
+    <exclude name="OnlyOneReturn" />
   </rule>
   <rule ref="category/java/design.xml">
     <exclude name="LoosePackageCoupling" />

@@ -117,4 +117,40 @@ class LoginRecordRepositoryTest {
             fail(ex);
         }
     }
+
+    /** Test update. */
+    @Test
+    public void testUpdate() {
+        final LoginRecordRepository loginRecordRepository = new LoginRecordRepository(
+                TestUtil.getDataPath("login_records.csv"), // NOPMD
+                mock(UserRepository.class));
+
+        assertThrows(UnsupportedOperationException.class, () -> {
+            loginRecordRepository.update(new LoginRecord.Builder().build());
+        });
+    }
+
+    /** Test find with ID. */
+    @Test
+    public void testFindWithId() {
+        try {
+            final Path filePath = TestUtil.getDataPath("login_records_find_wind_id.csv");
+
+            // Create original file.
+            Files.writeString(filePath, CONTENT, StandardCharsets.UTF_8);
+
+            // Mocking
+            final UserRepository userRepository = mock(UserRepository.class);
+
+            // Start testing.
+            final LoginRecordRepository loginRecordRepository = new LoginRecordRepository(
+                    filePath, userRepository);
+            assertTrue(loginRecordRepository.findWithId("L00008").isEmpty());
+            final Optional<LoginRecord> record = loginRecordRepository.findWithId("L00004");
+            assertFalse(record.isEmpty());
+            assertEquals("U00003", record.get().getUserId());
+        } catch (IOException ex) {
+            fail(ex);
+        }
+    }
 }

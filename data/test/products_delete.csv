@@ -1,0 +1,5 @@
+6
+P00001,data/test/product_images/P00001-image1.jpg,Pillow,Coop Home Goods,C00001,15,Good,12.34,0.0,S00001
+P00002,data/test/product_images/P00002-image2.jpg,Long Throw Pillow,Sleep Better,C00001,16,Better,56.78,10.0,S00002
+P00004,data/test/product_images/P00004-image4.jpg,Bed Rack,Snuggle-Pedic,C00002,18,Awesome,34.56,20.0,S00002
+P00005,data/test/product_images/P00005-image5.jpg,Blanket,Mediflow,C00003,19,Holly,78.9,30.0,S00004

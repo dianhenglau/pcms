@@ -19,6 +19,9 @@ plugins {
     // Apply the pmd plugin to add support for code static analyzing
     pmd
 
+    // Apply the jacoco plugin to add code coverage calculation
+    jacoco
+
     // Apply the spotbugs plugin to add support for bug discovery
     id("com.github.spotbugs") version "2.0.1"
 }
@@ -45,6 +48,7 @@ dependencies {
     // To use mockito
     testImplementation("org.mockito:mockito-junit-jupiter:3.1.0")
 
+    // To usee itext pdf
     implementation("com.itextpdf:itext7-core:7.1.8")
 }
 
@@ -71,7 +75,7 @@ tasks.withType(Checkstyle::class) {
 }
 
 pmd {
-    toolVersion = "6.17.0"
+    toolVersion = "6.20.0"
     setConsoleOutput(true)
     setRuleSetFiles(files("config/pmd/ruleset.xml"))
     setRuleSets(listOf())

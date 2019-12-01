@@ -142,13 +142,50 @@ class ProductRepositoryTest {
             verify(supplierRepository).findWithId("S00002");
 
             final InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
-                productRepository.update(new Product.Builder().withId("U00007").build());
+                productRepository.update(new Product.Builder().withId("P00007").build());
             });
             assertEquals("id", ex.getLabel());
             assertEquals(TestUtil.keyNotFoundErrMsg("ID"), ex.getMessage());
 
             doCommonValidations(productRepository, categoryRepository, supplierRepository, 
                     newProduct);
+
+        } catch (IOException ex) {
+            fail(ex);
+        }
+    }
+
+    /** Test delete. */
+    @Test
+    public void testDelete() {
+        try {
+            final Path filePath = TestUtil.getDataPath("products_delete.csv");
+
+            // Prepare files
+            Files.writeString(filePath, CONTENT, StandardCharsets.UTF_8);
+            Files.copy(Path.of("data/test/image4.jpg"), Path.of("data/test/P00003-image4.jpg"),
+                    StandardCopyOption.REPLACE_EXISTING);
+
+            // Mocking
+            final CategoryRepository categoryRepository = mock(CategoryRepository.class);
+            final SupplierRepository supplierRepository = mock(SupplierRepository.class);
+
+            // Start testing.
+            final ProductRepository productRepository = new ProductRepository(
+                    filePath, categoryRepository, supplierRepository);
+            final Product product = productRepository.findWithId("P00003").get();
+
+            productRepository.delete(product);
+            assertEquals(
+                    CONTENT.replace(ROW3 + "\n", ""),
+                    Files.readString(filePath, StandardCharsets.UTF_8));
+            assertFalse(Files.exists(Path.of("data/test/product_images/P00003-image4.jpg")));
+
+            final InvalidFieldException ex = assertThrows(InvalidFieldException.class, () -> {
+                productRepository.delete(new Product.Builder().withId("P00007").build());
+            });
+            assertEquals("id", ex.getLabel());
+            assertEquals(TestUtil.keyNotFoundErrMsg("ID"), ex.getMessage());
 
         } catch (IOException ex) {
             fail(ex);

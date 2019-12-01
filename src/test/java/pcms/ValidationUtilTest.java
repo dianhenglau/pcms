@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // CHECKSTYLE:ON
 
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -296,6 +297,16 @@ class ValidationUtilTest {
         ValidationUtil.notNegative("g2", 1.0);
         assertThrows(InvalidFieldException.class, () -> {
             ValidationUtil.notNegative("g3", -0.000_000_1);
+        });
+    }
+
+    /** Test valid date range. */
+    @Test
+    public void testValidDateRange() {
+        ValidationUtil.validDateRange("g3", LocalDate.ofEpochDay(0), LocalDate.ofEpochDay(1));
+        ValidationUtil.validDateRange("g4", LocalDate.ofEpochDay(1), LocalDate.ofEpochDay(1));
+        assertThrows(InvalidFieldException.class, () -> {
+            ValidationUtil.validDateRange("g5", LocalDate.ofEpochDay(2), LocalDate.ofEpochDay(1));
         });
     }
 }

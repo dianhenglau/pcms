@@ -162,11 +162,11 @@ public abstract class Repository<T extends Model> {
     }
 
     /** Get image directory. */
-    protected Path getImageDir() {
+    protected Path getImageDir(final String folder) {
         final Path dataDir = dataPath.getParent();
         final Path imageDir = dataDir == null
-                ? Path.of("product_images")
-                : dataDir.resolve("product_images");
+                ? Path.of(folder)
+                : dataDir.resolve(folder);
 
         try {
             Files.createDirectories(imageDir);

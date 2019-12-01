@@ -129,12 +129,11 @@ public final class CategoryController {
     public void update(final String id) {
         try {
             final Category category = ValidationUtil.recordExists(categoryRepository, id);
-            final Category newCategory = categoryRepository.update(new Category.Builder(category)
+            categoryRepository.update(new Category.Builder(category)
                     .withId(id)
                     .withName(editCategoryView.nameTf.getText())
                     .withDescription(editCategoryView.descriptionTa.getText())
                     .build());
-            categoryRepository.update(newCategory);
             rootView.showSuccessDialog("Category updated.");
             show(id);
         } catch (InvalidFieldException ex) {

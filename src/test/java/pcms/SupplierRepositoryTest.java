@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import pcms.supplier.Supplier;
 import pcms.supplier.SupplierRepository;
@@ -123,6 +124,30 @@ class SupplierRepositoryTest {
             assertEquals(
                     String.join("\n", "2", result.toRow(), ""),
                     Files.readString(filePath, StandardCharsets.UTF_8));
+        } catch (IOException ex) {
+            fail(ex);
+        }
+    }
+
+    /** Test find with name. */
+    @Test
+    public void testFindWithName() {
+        try {
+            final Path filePath = TestUtil.getDataPath("suppliers_find_with_name.csv");
+
+            // Create original file.
+            Files.writeString(filePath, CONTENT, StandardCharsets.UTF_8);
+
+            // Start testing.
+            final SupplierRepository supplierRepository = new SupplierRepository(filePath);
+            assertEquals(5, supplierRepository.all().size());
+
+            assertTrue(supplierRepository.findWithName("Blah Holdings Sdn Bhd").isEmpty());
+            final Optional<Supplier> result = supplierRepository.findWithName(
+                    "JKL Holdings Sdn Bhd");
+            assertFalse(result.isEmpty());
+            assertEquals("+60123456792", result.get().getPhone());
+
         } catch (IOException ex) {
             fail(ex);
         }

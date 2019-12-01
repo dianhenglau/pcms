@@ -24,7 +24,7 @@ public final class CatalogRepository extends Repository<Catalog> {
         super(dataPath, id -> new Catalog.Builder().withId(id).build(), Catalog::new);
         this.userRepository = userRepository;
         this.productRepository = productRepository;
-        this.imageDir = getImageDir();
+        this.imageDir = getImageDir("catalog_images");
     }
 
     /** Insert catalog. */
@@ -35,7 +35,7 @@ public final class CatalogRepository extends Repository<Catalog> {
         doCommonValidation(catalog);
         
         // Copy image
-        final String id = String.format("P%05d", newId);
+        final String id = String.format("G%05d", newId);
         final String newFilename = copyImage(imageDir, catalog.getBanner(), id);
 
         // Add to cache
@@ -88,19 +88,20 @@ public final class CatalogRepository extends Repository<Catalog> {
                 catalog.getId(), Catalog::getId);
 
         // Make sure banner is provided.
-        ValidationUtil.notEmpty("image", catalog.getBanner());
+        ValidationUtil.notEmpty("banner", catalog.getBanner());
         
-        // Make sure category ID is valid and exist.
+        // Make sure user ID is valid and exist.
         ValidationUtil.notEmpty("user ID", catalog.getUserId());
         ValidationUtil.recordExists(userRepository, catalog.getUserId());
         
-        // Make sure quantity, retail price and discount are not negative.
-
-        
         // Make sure product ID is valid and exist.
-        for(int i = 0; i < catalog.getProductDiscount().size(); i++){
-            ValidationUtil.notEmpty("product ID", catalog.getProductDiscount().get(i).getProductId());
-            ValidationUtil.recordExists(productRepository, catalog.getProductDiscount().get(i).getProductId());
+        for (final ProductDiscount p: catalog.getProductDiscounts()) {
+            ValidationUtil.notEmpty("product ID", p.getProductId());
+            ValidationUtil.recordExists(productRepository, p.getProductId());
         }
+
+        // Make sure start date is less than or equals to end date.
+        ValidationUtil.validDateRange("season date range", catalog.getSeasonStartDate(), 
+                catalog.getSeasonEndDate());
     }
 }

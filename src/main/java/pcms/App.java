@@ -11,6 +11,7 @@ import pcms.catalog.CatalogInfoView;
 import pcms.catalog.CatalogListView;
 import pcms.catalog.CatalogRepository;
 import pcms.catalog.EditCatalogView;
+import pcms.catalog.ProductDiscount;
 import pcms.category.AddCategoryView;
 import pcms.category.CategoryController;
 import pcms.category.CategoryInfoView;
@@ -107,6 +108,7 @@ public final class App {
                 getDataPath("catalog.csv"), userRepository, productRepository);
         Catalog.setUserRepository(userRepository);
         Catalog.setProductRepository(productRepository);
+        ProductDiscount.setProductRepository(productRepository);
     }
 
     /** Run app. */

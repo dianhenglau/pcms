@@ -17,7 +17,9 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import pcms.ViewUtil;
+import pcms.catalog.Catalog;
 import pcms.loginrecord.LoginRecord;
+import pcms.product.Product;
 import pcms.supplier.Supplier;
 import pcms.user.User;
 
@@ -32,11 +34,11 @@ public final class DashboardView {
     /** Product list button. */
     public final JButton productListBtn;
     /** Product table body button. */
-    private final JPanel productTablePane; // NOPMD - temporary
+    private final JPanel productTablePane;
     /** Catalog list button. */
     public final JButton catalogListBtn;
     /** Catalog table body button. */
-    private final JPanel catalogTablePane; // NOPMD - temporary
+    private final JPanel catalogTablePane;
     /** Login record list button. */
     public final JButton loginRecordListBtn;
     /** Login record table body button. */
@@ -88,6 +90,8 @@ public final class DashboardView {
     /** Render. */
     public void render(
             final List<Supplier> suppliers,
+            final List<Product> products,
+            final List<Catalog> catalogs,
             final List<LoginRecord> loginRecords,
             final List<User> users) {
 
@@ -100,6 +104,30 @@ public final class DashboardView {
                     ViewUtil.createUnboldLabel(x.getId()),
                     ViewUtil.createUnboldLabel(x.getName()),
                     ViewUtil.createUnboldLabel(x.isActive() ? "Active" : "Inactive")});
+
+        updateTable(
+                new String[] {"ID", "Name", "Quantity", "Price", "Discount"}, 
+                new int[] {50, 150, 50, 50, 70},
+                products, 
+                productTablePane, 
+                x -> new JComponent[] {
+                    ViewUtil.createUnboldLabel(x.getId()),
+                    ViewUtil.createUnboldLabel(x.getName()),
+                    ViewUtil.createUnboldLabel(Integer.toString(x.getQuantity())),
+                    ViewUtil.createUnboldLabel(String.format("%.2f", x.getRetailPrice())),
+                    ViewUtil.createUnboldLabel(String.format("%.2f", x.getDiscount() * 100))});
+
+        updateTable(
+                new String[] {"ID", "Title", "Start", "End"}, 
+                new int[] {50, 120, 90, 90},
+                catalogs, 
+                catalogTablePane, 
+                x -> new JComponent[] {
+                    ViewUtil.createUnboldLabel(x.getId()),
+                    ViewUtil.createUnboldLabel(x.getTitle()),
+                    ViewUtil.createUnboldLabel(x.getSeasonStartDate().toString()),
+                    ViewUtil.createUnboldLabel(x.getSeasonEndDate().toString())});
+                    
 
         final DateTimeFormatter formatter = DateTimeFormatter
                 .ofPattern("dd/MM HH:mm")

@@ -237,6 +237,8 @@ public final class App {
         final DashboardController dashboardController = new DashboardController(
                 session,
                 supplierRepository,
+                productRepository,
+                catalogRepository,
                 loginRecordRepository,
                 userRepository,
                 dashboardView,
@@ -263,6 +265,8 @@ public final class App {
         catalogController.init();
         dashboardController.init(
                 supplierController, 
+                productController,
+                catalogController,
                 loginRecordController,
                 userController);
 

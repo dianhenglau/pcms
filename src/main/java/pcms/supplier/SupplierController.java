@@ -10,7 +10,7 @@ import pcms.ValidationUtil;
 /** Supplier controller. */
 public final class SupplierController {
     /** Session. */
-    private final Session session; // NOPMD - temporary
+    private final Session session;
     /** Supplier repository. */
     private final SupplierRepository supplierRepository;
 
@@ -65,13 +65,17 @@ public final class SupplierController {
 
         if (search.isEmpty()) {
             supplierListView.render(
-                    supplierRepository.all(), search, e -> show(e.getActionCommand()));
+                    supplierRepository.all(), 
+                    session.getUser().get().isAdministrator(), 
+                    search, 
+                    e -> show(e.getActionCommand()));
         } else {
             supplierListView.render(
                     supplierRepository.filter(x ->
                         x.getId().toLowerCase(Locale.US).contains(lowerCase)
                         || x.getName().toLowerCase(Locale.US).contains(lowerCase)
                         || x.getPhone().toLowerCase(Locale.US).contains(lowerCase)),
+                    session.getUser().get().isAdministrator(), 
                     search,
                     e -> show(e.getActionCommand()));
         }
@@ -107,7 +111,7 @@ public final class SupplierController {
             final Supplier supplier = ValidationUtil.recordExists(supplierRepository, id);
             rootView.render(RootView.Views.MAIN_VIEW);
             rootView.mainView.contentView.render(ContentView.Views.SUPPLIER_INFO);
-            supplierInfoView.render(supplier);
+            supplierInfoView.render(supplier, session.getUser().get().isAdministrator());
         } catch (InvalidFieldException ex) {
             rootView.showErrorDialog(ex.getMessage());
         }

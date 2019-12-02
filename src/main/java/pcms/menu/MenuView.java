@@ -73,6 +73,9 @@ public final class MenuView {
     public void render(final User user) {
         usernameLbl.setText(user.getUsername());
         profileBtn.setActionCommand(user.getId());
+
+        userBtn.setVisible(user.isAdministrator());
+        loginRecordBtn.setVisible(user.isAdministrator());
     }
 
     /** Style username. */

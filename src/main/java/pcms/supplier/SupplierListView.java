@@ -45,6 +45,7 @@ public final class SupplierListView {
     /** Render suppliers. */
     public void render(
             final List<Supplier> suppliers, 
+            final boolean isAdministrator,
             final String search, 
             final ActionListener goView) {
 
@@ -56,6 +57,8 @@ public final class SupplierListView {
         }
         tablePane.revalidate();
         tablePane.repaint();
+
+        addBtn.setVisible(isAdministrator);
     }
 
     /** Convert record to table row. */

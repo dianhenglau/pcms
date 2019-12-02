@@ -50,7 +50,7 @@ public final class SupplierInfoView {
     }
 
     /** Render. */
-    public void render(final Supplier supplier) {
+    public void render(final Supplier supplier, final boolean isAdministrator) {
         editBtn.setActionCommand(supplier.getId());
         idLbl.setText(supplier.getId());
         nameLbl.setText(supplier.getName());
@@ -58,5 +58,7 @@ public final class SupplierInfoView {
         phoneLbl.setText(supplier.getPhone());
         addressLbl.setText(supplier.getAddress());
         statusLbl.setText(supplier.isActive() ? "Active" : "Inactive");
+
+        editBtn.setVisible(isAdministrator);
     }
 }

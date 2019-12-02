@@ -52,6 +52,7 @@ public final class CatalogListView {
     public void render(
             final List<Catalog> catalogs, 
             final String search,
+            final boolean isProductManager,
             final ActionListener goView,
             final ActionListener goDelete) {
 
@@ -63,6 +64,8 @@ public final class CatalogListView {
         }
         tablePane.revalidate();
         tablePane.repaint();
+
+        addBtn.setVisible(isProductManager);
     }
 
     /** Convert record to table row. */

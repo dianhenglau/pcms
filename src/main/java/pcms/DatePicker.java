@@ -100,7 +100,7 @@ public final class DatePicker {
         for (int x = 7; x < gridBtn.length; x++) {
             gridBtn[x].setText("");
         }
- 			
+
         calendar.set(year, month, 1);
         final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         final int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);

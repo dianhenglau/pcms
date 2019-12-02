@@ -78,7 +78,7 @@ public final class CatalogInfoView {
     }
     
     /** Render. */
-    public void render(final Catalog catalog) {
+    public void render(final Catalog catalog, final boolean isProductManager) {
         final DateTimeFormatter formatter = DateTimeFormatter
                 .ofPattern("yyyy-MM-dd HH:mm:ss")
                 .withZone(ZoneId.systemDefault());
@@ -101,6 +101,9 @@ public final class CatalogInfoView {
         }
         productsPane.revalidate();
         productsPane.repaint();
+
+        editBtn.setVisible(isProductManager);
+        pdfBtn.setVisible(isProductManager);
     }
 
     /** Convert product discount to row. */

@@ -1,4 +1,4 @@
-package pcms.catalog;
+package pcms.catalog; // NOPMD - Okay to have many imports
 
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -19,7 +19,6 @@ import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.VerticalAlignment;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -118,11 +117,12 @@ public final class CatalogController {
 
         rootView.render(RootView.Views.MAIN_VIEW);
         rootView.mainView.contentView.render(ContentView.Views.CATALOG_LIST);
-        
+
         if (search.isEmpty()) {
             catalogListView.render(
                     catalogRepository.all(), 
                     search,
+                    session.getUser().get().isProductManager(),
                     e -> show(e.getActionCommand()),
                     e -> destroy(e.getActionCommand(), search));
         } else {
@@ -131,6 +131,7 @@ public final class CatalogController {
                         x.getId().toLowerCase(Locale.US).contains(lowerCase)
                         || x.getTitle().toLowerCase(Locale.US).contains(lowerCase)),
                     search,
+                    session.getUser().get().isProductManager(),
                     e -> show(e.getActionCommand()),
                     e -> destroy(e.getActionCommand(), search));
         }
@@ -155,7 +156,7 @@ public final class CatalogController {
                 final JFormattedTextField tf = addCatalogView.specialDiscountTfs.get(i);
                 if (cb.isSelected()) {
                     productDiscounts.add(new ProductDiscount(cb.getActionCommand(), 
-                            ((Number) tf.getValue()).doubleValue()));
+                                ((Number) tf.getValue()).doubleValue()));
                 }
             }
 
@@ -188,7 +189,7 @@ public final class CatalogController {
             final Catalog catalog = ValidationUtil.recordExists(catalogRepository, id);
             rootView.render(RootView.Views.MAIN_VIEW);
             rootView.mainView.contentView.render(ContentView.Views.CATALOG_INFO);
-            catalogInfoView.render(catalog);
+            catalogInfoView.render(catalog, session.getUser().get().isProductManager());
         } catch (InvalidFieldException ex) {
             rootView.showErrorDialog(ex.getMessage());
         }
@@ -219,7 +220,7 @@ public final class CatalogController {
                 final JFormattedTextField tf = editCatalogView.specialDiscountTfs.get(i);
                 if (cb.isSelected()) {
                     productDiscounts.add(new ProductDiscount(cb.getActionCommand(), 
-                            ((Number) tf.getValue()).doubleValue()));
+                                ((Number) tf.getValue()).doubleValue()));
                 }
             }
 
@@ -244,7 +245,7 @@ public final class CatalogController {
             rootView.showErrorDialog(ex.getMessage());
         }                                                       
     }
-    
+
     /** Destroy (delete) category. */
     public void destroy(final String id, final String originalParameter) {
         try {
@@ -266,123 +267,133 @@ public final class CatalogController {
             renderer.accept(fileChooser.getSelectedFile().toPath().toString());
         }
     }
-    
+
     /** Date picker. */
     public void chooseDate(final Consumer<String> renderer) {
         final JFrame dateChooser = new JFrame();
         renderer.accept(new DatePicker(dateChooser).setPickedDate());
     }
-    
+
     /** Generate catalog pdf. */
-    public void createPdf(final String id) {
+    public void createPdf(final String id) { // NOPMD - Okay to have long method
+        Document doc = null;
         try {
             final Catalog catalog = ValidationUtil.recordExists(catalogRepository, id);
-            try{
-                /** Set pdf file path. */
-                final String dest = "data/main/catalog_pdf/"
-                        + catalog.getTitle()
-                        + "_"
-                        + catalog.getSeasonStartDate().toString().substring(0,4)
-                        + ".pdf";
-                File file = new File(dest);
-                file.getParentFile().mkdirs();
 
-                /** Initialize PDF document. */
-                PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
-                /** Set default font. */
-                try (Document doc = new Document(pdf)) {
-                    /** Set default font. */
-                    PdfFont norm = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
-                    PdfFont bold = PdfFontFactory.createFont(StandardFonts.TIMES_BOLD);
-                    
-                    /** Display catalog info. */
-                    Table infoTable = new Table(UnitValue.createPercentArray(new float[]{2,5}), true);
-                    
-                    infoTable.addCell(new Cell()
-                            .add(new Image(ImageDataFactory.create(catalog.getBanner()))
-                                    .setHeight(100)
-                                    .setHorizontalAlignment(HorizontalAlignment.CENTER))
-                            .setBorder(Border.NO_BORDER));
-                    
-                    infoTable.addCell(new Cell()
-                            .add(new Paragraph("Price List of "
-                                    + catalog.getTitle()
-                                    + " Sales "
-                                    + catalog.getSeasonStartDate().toString().substring(0,4)
-                                    + "\n"
-                                    + "Effective on: "
-                                    + catalog.getSeasonStartDate().toString()
-                                    + "-"
-                                    + catalog.getSeasonEndDate().toString())
-                                    .setFont(norm))
-                            .setTextAlignment(TextAlignment.CENTER)
-                            .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                            .setBorder(Border.NO_BORDER)
-                            .setKeepTogether(true));
-                    
-                    doc.add(infoTable);       
-                    doc.add(new Paragraph(""));
-                    
-                    /** Display product info */
-                    Table productTable = new Table(UnitValue.createPercentArray(new float[]{1,1,4,1,1,1}), true);
-                    
-                    /** Add header to table. */
-                    final String[] header = {"Product ID", "Product Image", "Product\nName", "Retail Price", "Special Discount", "Discount Price"};
-                    for (String i : header) {
-                        productTable.addHeaderCell(new Cell()
-                                .setKeepTogether(true)
-                                .add(new Paragraph(new Text(i).setFont(bold)))
-                                .setTextAlignment(TextAlignment.CENTER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE));
-                    }
-                    
-                    doc.add(productTable);
-                    
-                    /** Add product to table. */
-                    for (final ProductDiscount p: catalog.getProductDiscounts()) {
-                        final Product product = p.getProduct().get();
-                        
-                        productTable.addCell(new Cell()
-                                .add(new Paragraph(product.getId()).setFont(norm))
-                                .setTextAlignment(TextAlignment.CENTER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                .setKeepTogether(true));
-                        productTable.addCell(new Image(ImageDataFactory.create(product.getImage()))
-                                .setAutoScale(true));
-                        productTable.addCell(new Cell()
-                                .add(new Paragraph(product.getName()).setFont(norm))
-                                .setTextAlignment(TextAlignment.CENTER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                .setKeepTogether(true));
-                        productTable.addCell(new Cell()
-                                .add(new Paragraph(String.format("%.2f", product.getRetailPrice())).setFont(norm))
-                                .setTextAlignment(TextAlignment.CENTER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                .setKeepTogether(true));
-                        productTable.addCell(new Cell()
-                                .add(new Paragraph(String.format("%.0f%%", p.getDiscount() * 100)).setFont(norm))
-                                .setTextAlignment(TextAlignment.CENTER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                .setKeepTogether(true));
-                        productTable.addCell(new Cell()
-                                .add(new Paragraph(String.format("%.2f", (1 - p.getDiscount()) * product.getRetailPrice())).setFont(norm))
-                                .setTextAlignment(TextAlignment.CENTER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                .setKeepTogether(true));
-                        productTable.flush();
-                        
-                    }
-                    productTable.complete();
-                    doc.close();
-                    rootView.showSuccessDialog("PDF created.");
-                }
-
-            } catch (IOException ex) {
-                Logger.getLogger(CatalogController.class.getName()).log(Level.SEVERE, null, ex);
+            // Set pdf file path.
+            final JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setSelectedFile(new File(String.join("", 
+                    catalog.getTitle(),
+                    "_",
+                    catalog.getSeasonStartDate().toString().substring(0,4),
+                    ".pdf")));
+            final int returnValue = fileChooser.showOpenDialog(rootView.frame);
+            if (returnValue != JFileChooser.APPROVE_OPTION) {
+                return;
             }
+
+            // Initialize PDF document.
+            doc = new Document(new PdfDocument(new PdfWriter(fileChooser.getSelectedFile())));
+            // Set default font.
+            final PdfFont norm = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
+            final PdfFont bold = PdfFontFactory.createFont(StandardFonts.TIMES_BOLD);
+
+            // Display catalog info.
+            final Table infoTable = new Table(UnitValue.createPercentArray(
+                        new float[] {2, 5}), true);
+
+            infoTable.addCell(new Cell()
+                    .add(new Image(ImageDataFactory.create(catalog.getBanner()))
+                        .setHeight(100)
+                        .setHorizontalAlignment(HorizontalAlignment.CENTER))
+                    .setBorder(Border.NO_BORDER));
+
+            infoTable.addCell(new Cell()
+                    .add(new Paragraph("Price List of "
+                            + catalog.getTitle()
+                            + " Sales "
+                            + catalog.getSeasonStartDate().toString().substring(0,4)
+                            + "\n"
+                            + "Effective on: "
+                            + catalog.getSeasonStartDate().toString()
+                            + "-"
+                            + catalog.getSeasonEndDate().toString())
+                        .setFont(norm))
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                    .setBorder(Border.NO_BORDER)
+                    .setKeepTogether(true));
+
+            doc.add(infoTable);       
+            doc.add(new Paragraph(""));
+
+            // Display product info
+            final Table productTable = new Table(UnitValue.createPercentArray(
+                        new float[] {1, 1, 4, 1, 1, 1}), true);
+
+            // Add header to table. 
+            final String[] header = {"Product ID", "Product Image", "Product\nName", 
+                "Retail Price", "Special Discount", "Discount Price"};
+            for (final String i : header) {
+                productTable.addHeaderCell(new Cell()
+                        .setKeepTogether(true)
+                        .add(new Paragraph(new Text(i).setFont(bold)))
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setVerticalAlignment(VerticalAlignment.MIDDLE));
+            }
+
+            doc.add(productTable);
+
+            // Add product to table. 
+            for (final ProductDiscount p: catalog.getProductDiscounts()) {
+                final Product product = p.getProduct().get();
+
+                productTable.addCell(new Cell()
+                        .add(new Paragraph(product.getId()).setFont(norm))
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .setKeepTogether(true));
+                productTable.addCell(new Image(ImageDataFactory.create(product.getImage()))
+                        .setAutoScale(true));
+                productTable.addCell(new Cell()
+                        .add(new Paragraph(product.getName()).setFont(norm))
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .setKeepTogether(true));
+                productTable.addCell(new Cell()
+                        .add(new Paragraph(String.format("%.2f", product.getRetailPrice()))
+                            .setFont(norm))
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .setKeepTogether(true));
+                productTable.addCell(new Cell()
+                        .add(new Paragraph(String.format("%.0f%%", p.getDiscount() * 100))
+                            .setFont(norm))
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .setKeepTogether(true));
+                final double discountPrice = (1 - p.getDiscount()) * product.getRetailPrice();
+                productTable.addCell(new Cell()
+                        .add(new Paragraph(String.format("%.2f", discountPrice)).setFont(norm))
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .setKeepTogether(true));
+                productTable.flush();
+
+            }
+            productTable.complete();
+            doc.close();
+            rootView.showSuccessDialog("PDF created.");
+
+        } catch (IOException ex) {
+            Logger.getLogger(CatalogController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidFieldException ex) {
             rootView.showErrorDialog(ex.getMessage());
+        } finally {
+            if (doc != null) {
+                doc.close();
+            }
         }
-        
+
     }
 }

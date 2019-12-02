@@ -1,5 +1,7 @@
 package pcms.loginrecord;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import pcms.ContentView;
 import pcms.RootView;
@@ -42,12 +44,17 @@ public final class LoginRecordController {
         rootView.render(RootView.Views.MAIN_VIEW);
         rootView.mainView.contentView.render(ContentView.Views.LOGIN_RECORD_LIST);
 
+        final DateTimeFormatter formatter = DateTimeFormatter
+                .ofPattern("yyyy-MM-dd")
+                .withZone(ZoneId.systemDefault());
+
         if (search.isEmpty()) {
             loginRecordListView.render(loginRecordRepository.all());
         } else {
             loginRecordListView.render(loginRecordRepository.filter(x -> 
                     x.getUserId().toLowerCase(Locale.US).contains(lowerCase)
-                    || x.getUser().getUsername().toLowerCase(Locale.US).contains(lowerCase)));
+                    || x.getUser().getUsername().toLowerCase(Locale.US).contains(lowerCase)
+                    || formatter.format(x.getTimestamp()).contains(lowerCase)));
         }
     }
 }

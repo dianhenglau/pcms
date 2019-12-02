@@ -85,7 +85,7 @@ public final class DatePicker {
         buttonSection.add(monthLbl);
         buttonSection.add(nextBtn);
 
-        /** Add both sections together and display date. */
+        // Add both sections together and display date.
         dialog.add(dateSection, BorderLayout.CENTER);
         dialog.add(buttonSection, BorderLayout.SOUTH);
         dialog.pack();

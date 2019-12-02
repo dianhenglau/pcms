@@ -102,7 +102,9 @@ public final class ProductController {
     public void create() {
         rootView.render(RootView.Views.MAIN_VIEW);
         rootView.mainView.contentView.render(ContentView.Views.ADD_PRODUCT);
-        addProductView.render(categoryRepository.all(), supplierRepository.all());
+        addProductView.render(
+                categoryRepository.all(), 
+                supplierRepository.filter(x -> x.isActive()));
     }
 
     /** Store created product. */
@@ -126,6 +128,9 @@ public final class ProductController {
             final Optional<Supplier> supplier = supplierRepository.findWithName(supplierName);
             if (supplier.isEmpty()) {
                 throw new InvalidFieldException("supplier ID", "Supplier ID not found.");
+            }
+            if (!supplier.get().isActive()) {
+                throw new InvalidFieldException("supplier", "Supplier is inactive.");
             }
 
             final Product newProduct = productRepository.insert(new Product.Builder()
@@ -165,9 +170,15 @@ public final class ProductController {
     public void edit(final String id) {
         try {
             final Product product = ValidationUtil.recordExists(productRepository, id);
+            if (!product.getSupplier().isActive()) {
+                throw new InvalidFieldException("supplier", "Cannot edit product, because its supplier is inactive.");
+            }
             rootView.render(RootView.Views.MAIN_VIEW);
             rootView.mainView.contentView.render(ContentView.Views.EDIT_PRODUCT);
-            editProductView.render(product, categoryRepository.all(), supplierRepository.all());
+            editProductView.render(
+                    product, 
+                    categoryRepository.all(), 
+                    supplierRepository.filter(x -> x.isActive()));
         } catch (InvalidFieldException ex) {
             rootView.showErrorDialog(ex.getMessage());
         }
@@ -194,6 +205,9 @@ public final class ProductController {
             final Optional<Supplier> supplier = supplierRepository.findWithName(supplierName);
             if (supplier.isEmpty()) {
                 throw new InvalidFieldException("supplier ID", "Supplier ID not found.");
+            }
+            if (!supplier.get().isActive()) {
+                throw new InvalidFieldException("supplier", "Supplier is inactive.");
             }
 
             final Product product = ValidationUtil.recordExists(productRepository, id);

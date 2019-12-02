@@ -85,7 +85,7 @@ public final class DatePicker {
         buttonSection.add(monthLbl);
         buttonSection.add(nextBtn);
 
-        // Add both sections together and display date
+        /** Add both sections together and display date. */
         dialog.add(dateSection, BorderLayout.CENTER);
         dialog.add(buttonSection, BorderLayout.SOUTH);
         dialog.pack();
@@ -100,7 +100,7 @@ public final class DatePicker {
         for (int x = 7; x < gridBtn.length; x++) {
             gridBtn[x].setText("");
         }
-
+ 			
         calendar.set(year, month, 1);
         final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         final int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);

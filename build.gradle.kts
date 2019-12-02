@@ -46,9 +46,9 @@ dependencies {
     compileOnly("com.github.spotbugs:spotbugs-annotations:4.0.0-beta4")
 
     // To use mockito
-    testImplementation("org.mockito:mockito-junit-jupiter:3.2.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:3.1.0")
 
-    // itext pdf
+    // To usee itext pdf
     implementation("com.itextpdf:itext7-core:7.1.8")
 }
 

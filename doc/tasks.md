@@ -9,8 +9,8 @@
 - [x] Category module
 - [x] Product module
 - [x] Catalog module
-- [ ] Print to PDF
-- [ ] Role authorization
+- [x] Print to PDF
+- [x] Role authorization
 - [ ] Pagination
 - [x] Variable page size
 - [x] Jump to top left corner after page switch

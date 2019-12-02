@@ -93,7 +93,8 @@ public final class DashboardView {
             final List<Product> products,
             final List<Catalog> catalogs,
             final List<LoginRecord> loginRecords,
-            final List<User> users) {
+            final List<User> users,
+            final boolean isAdministrator) {
 
         updateTable(
                 new String[] {"ID", "Name", "Status"}, 
@@ -154,6 +155,9 @@ public final class DashboardView {
                     ViewUtil.createUnboldLabel(x.getId()),
                     ViewUtil.createUnboldLabel(x.getUsername()),
                     ViewUtil.createUnboldLabel(x.isActive() ? "Active" : "Inactive")});
+
+        loginRecordTablePane.getParent().setVisible(isAdministrator);
+        userTablePane.getParent().setVisible(isAdministrator);
     }
 
     /** Update table. */

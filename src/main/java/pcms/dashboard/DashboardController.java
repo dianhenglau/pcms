@@ -17,7 +17,7 @@ import pcms.user.UserRepository;
 /** Dashboard controller. */
 public final class DashboardController {
     /** Session. */
-    private final Session session; // NOPMD - temporary
+    private final Session session;
 
     /** Supplier repository. */
     private final SupplierRepository supplierRepository;
@@ -80,6 +80,7 @@ public final class DashboardController {
                 productRepository.allInReverse(5), 
                 catalogRepository.allInReverse(5), 
                 loginRecordRepository.allInReverse(5),
-                userRepository.allInReverse(5));
+                userRepository.allInReverse(5),
+                session.getUser().get().isAdministrator());
     }
 }

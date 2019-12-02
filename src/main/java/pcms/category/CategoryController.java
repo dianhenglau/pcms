@@ -1,11 +1,15 @@
 package pcms.category;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 import pcms.ContentView;
 import pcms.InvalidFieldException;
 import pcms.RootView;
 import pcms.Session;
 import pcms.ValidationUtil;
+import pcms.product.Product;
+import pcms.product.ProductRepository;
 
 /** Category controller. */
 public final class CategoryController {
@@ -13,6 +17,8 @@ public final class CategoryController {
     private final Session session; // NOPMD - temporary
     /** Category repository. */
     private final CategoryRepository categoryRepository;
+    /** Product repository. */
+    private final ProductRepository productRepository;
 
     /** Category list view. */
     private final CategoryListView categoryListView;
@@ -29,6 +35,7 @@ public final class CategoryController {
     public CategoryController(
             final Session session,
             final CategoryRepository categoryRepository,
+            final ProductRepository productRepository,
             final CategoryListView categoryListView,
             final CategoryInfoView categoryInfoView,
             final AddCategoryView addCategoryView,
@@ -37,6 +44,7 @@ public final class CategoryController {
 
         this.session = session;
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
         this.categoryListView = categoryListView;
         this.categoryInfoView = categoryInfoView;
         this.addCategoryView = addCategoryView;
@@ -145,6 +153,16 @@ public final class CategoryController {
     public void destroy(final String id, final String originalParameter) {
         try {
             final Category category = ValidationUtil.recordExists(categoryRepository, id);
+            final List<Product> products = productRepository.filter(x ->
+                    x.getCategoryId().equals(category.getId()));
+            if (!products.isEmpty()) {
+                // CHECKSTYLE:OFF
+                throw new InvalidFieldException("product", String.format(
+                        "Cannot delete category, because it was used in the following products: %s",
+                        String.join(", ", products.stream().map(Product::getId).collect(Collectors.toList()))));
+                // CHECKSTYLE:ON
+            }
+
             categoryRepository.delete(category);
             rootView.showSuccessDialog("Category deleted.");
             index(originalParameter);

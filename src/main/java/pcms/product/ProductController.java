@@ -1,8 +1,10 @@
 package pcms.product;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import pcms.ContentView;
@@ -10,6 +12,8 @@ import pcms.InvalidFieldException;
 import pcms.RootView;
 import pcms.Session;
 import pcms.ValidationUtil;
+import pcms.catalog.Catalog;
+import pcms.catalog.CatalogRepository;
 import pcms.category.Category;
 import pcms.category.CategoryRepository;
 import pcms.supplier.Supplier;
@@ -25,6 +29,8 @@ public final class ProductController {
     private final CategoryRepository categoryRepository;
     /** Supplier repository. */
     private final SupplierRepository supplierRepository;
+    /** Catalog repository. */
+    private final CatalogRepository catalogRepository;
 
     /** Product list view. */
     private final ProductListView productListView;
@@ -38,11 +44,12 @@ public final class ProductController {
     private final RootView rootView;
 
     /** Construct. */
-    public ProductController(
+    public ProductController(// NOPMD - Okay to have long parameter list
             final Session session,
             final ProductRepository productRepository,
             final CategoryRepository categoryRepository,
             final SupplierRepository supplierRepository,
+            final CatalogRepository catalogRepository,
             final ProductListView productListView,
             final ProductInfoView productInfoView,
             final AddProductView addProductView,
@@ -53,6 +60,7 @@ public final class ProductController {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.supplierRepository = supplierRepository;
+        this.catalogRepository = catalogRepository;
         this.productListView = productListView;
         this.productInfoView = productInfoView;
         this.addProductView = addProductView;
@@ -236,6 +244,17 @@ public final class ProductController {
     public void destroy(final String id, final String originalParameter) {
         try {
             final Product product = ValidationUtil.recordExists(productRepository, id);
+            final List<Catalog> catalogs = catalogRepository.filter(x ->
+                    x.getProductDiscounts().stream().anyMatch(y -> 
+                        y.getProductId().equals(product.getId())));
+            if (!catalogs.isEmpty()) {
+                // CHECKSTYLE:OFF
+                throw new InvalidFieldException("catalog", String.format(
+                        "Cannot delete product, because it was included in the following catalogs: %s",
+                        String.join(", ", catalogs.stream().map(Catalog::getTitle).collect(Collectors.toList()))));
+                // CHECKSTYLE:ON
+            }
+
             productRepository.delete(product);
             rootView.showSuccessDialog("Product deleted.");
             index(originalParameter);

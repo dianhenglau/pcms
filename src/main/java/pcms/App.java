@@ -201,6 +201,7 @@ public final class App {
         final CategoryController categoryController = new CategoryController(
                 session,
                 categoryRepository,
+                productRepository,
                 categoryListView,
                 categoryInfoView,
                 addCategoryView,
@@ -219,6 +220,7 @@ public final class App {
                 productRepository,
                 categoryRepository,
                 supplierRepository,
+                catalogRepository,
                 productListView,
                 productInfoView,
                 addProductView,

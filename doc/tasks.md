@@ -8,7 +8,7 @@
 - [x] Supplier module
 - [x] Category module
 - [x] Product module
-- [ ] Catalog module
+- [x] Catalog module
 - [ ] Print to PDF
 - [ ] Role authorization
 - [ ] Pagination
@@ -20,4 +20,4 @@
 - [ ] Show products in supplier info page
 - [ ] Filter login records by date
 - [ ] Filter users and suppliers by status
-- [ ] Dashboard suppliers and products
+- [x] Dashboard suppliers and products

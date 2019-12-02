@@ -108,7 +108,7 @@ public final class CatalogInfoView {
 
     /** Convert product discount to row. */
     private static JPanel toTableRow(final ProductDiscount productDiscount) {
-        final Product product = productDiscount.getProduct().get();
+        final Product product = productDiscount.getProduct();
 
         final JComponent[] components = {
                 ViewUtil.createUnboldLabel(product.getId()),

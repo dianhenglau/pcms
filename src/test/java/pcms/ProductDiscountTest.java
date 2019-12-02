@@ -34,6 +34,6 @@ class ProductDiscountTest {
 
         ProductDiscount.setProductRepository(productRepository);
         final ProductDiscount productDiscount = new ProductDiscount("P002", 20);
-        assertSame(product, productDiscount.getProduct().get());
+        assertSame(product, productDiscount.getProduct());
     }
 }

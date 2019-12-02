@@ -122,7 +122,7 @@ public final class ProductController {
 
             final String supplierName = (String) addProductView.supplierCob.getSelectedItem();
             if (supplierName == null) {
-                throw new InvalidFieldException("supplier", "Supplier is required.");
+                throw new InvalidFieldException("supplier", "Supplier is required."); // NOPMD
             }
 
             final Optional<Supplier> supplier = supplierRepository.findWithName(supplierName);
@@ -171,7 +171,8 @@ public final class ProductController {
         try {
             final Product product = ValidationUtil.recordExists(productRepository, id);
             if (!product.getSupplier().isActive()) {
-                throw new InvalidFieldException("supplier", "Cannot edit product, because its supplier is inactive.");
+                throw new InvalidFieldException("supplier", 
+                        "Cannot edit product, because its supplier is inactive.");
             }
             rootView.render(RootView.Views.MAIN_VIEW);
             rootView.mainView.contentView.render(ContentView.Views.EDIT_PRODUCT);

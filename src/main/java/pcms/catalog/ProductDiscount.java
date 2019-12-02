@@ -1,6 +1,5 @@
 package pcms.catalog;
 
-import java.util.Optional;
 import pcms.product.Product;
 import pcms.product.ProductRepository;
 
@@ -31,8 +30,8 @@ public final class ProductDiscount {
     }
 
     /** Get product. */
-    public Optional<Product> getProduct() {
-        return productRepository.findWithId(productId);
+    public Product getProduct() {
+        return productRepository.findWithId(productId).get();
     }
 
     /** Set product repository. */

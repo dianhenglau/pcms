@@ -346,7 +346,7 @@ public final class CatalogController {
 
             // Add product to table. 
             for (final ProductDiscount p: catalog.getProductDiscounts()) {
-                final Product product = p.getProduct().get();
+                final Product product = p.getProduct();
 
                 productTable.addCell(new Cell()
                         .add(new Paragraph(product.getId()).setFont(norm))

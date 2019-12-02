@@ -161,7 +161,7 @@ public final class EditCatalogView { // NOPMD - Okay to have many fields
         specialDiscountTfs.add(discountTf);
 
         for (final ProductDiscount pd: catalog.getProductDiscounts()) {
-            if (pd.getProduct().get().getId().equals(product.getId())) {
+            if (pd.getProduct().getId().equals(product.getId())) {
                 selectedCb.setSelected(true);
                 discountTf.setValue(Double.valueOf(pd.getDiscount()));
                 break;

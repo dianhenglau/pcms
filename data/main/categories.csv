@@ -1,6 +1,14 @@
-5
-C00001,Clothing,"Clothing (also known as clothes, apparel and attire) is a collective term for items worn on the body. Clothing is typically made of fabrics or textiles but over time has included garments made from animal skin or other thin sheets of materials put together. The wearing of clothing is mostly restricted to human beings and is a feature of all human societies. 
-
-The amount and type of clothing worn depends on gender, body type, social, and geographic considerations."
-C00003,Furniture,"Furniture refers to movable objects intended to support various human activities such as seating (e.g., chairs, stools, and sofas), eating (tables), and sleeping (e.g., beds). Furniture is also used to hold objects at a convenient height for work (as horizontal surfaces above the ground, such as tables and desks), or to store things (e.g., cupboards and shelves). Furniture can be a product of design and is considered a form of decorative art. In addition to furniture's functional role, it can serve a symbolic or religious purpose. It can be made from many materials, including metal, plastic, and wood. Furniture can be made using a variety of woodworking joints which often reflect the local culture."
-C00004,Bedroom,"A bedroom is a room of a house, mansion, castle, palace, hotel, dormitory, apartment, condominium, duplex or townhouse where people sleep."
+13
+C00001,Fashion,"Shop fashion including clothing, shoes, jewelry, watches, bags and more"
+C00003,Home and Kitchen,"Shop kitchen and dinning, bedding, bath, furniture, home décor and more"
+C00004,Luggage and Travel Gear ,"Shop suitcases, carry-ons, backpacks, travel totes, kids luggage and more"
+C00005,Arts and Crafts,"Shop art supplies including painting, drawing, crafting, scrapbooking, fabric and jewelry making"
+C00006,Automotive,"Shop automotive, car care, car accessories, oils and fluids, tools, and replacement parts"
+C00007,Beauty and Personal Care,"Shop makeup, skin care, hair care, fragrances and more"
+C00008,Computers,"Shop laptops, desktops, monitors, tablets, PC gaming, hard drives and storage, accessories and more"
+C00009,Electronics,"Shop home entertainment, TVs, home audio, headphones, cameras, accessories and more"
+C00010,Movies and TV ,"Available now
+The Perfect Gift of Movies and TV Shows
+on Blu-ray, DVD, and 4K"
+C00011,Toys and Games,"Shop action figures, arts and crafts, dolls, puzzles, learning toys and more"
+C00012,Video Games,"Shop video games for Nintendo, PlayStation, Xbox and more"

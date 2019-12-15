@@ -99,7 +99,8 @@ public final class ProductController {
             productListView.render(
                     productRepository.filter(x ->
                         x.getId().toLowerCase(Locale.US).contains(lowerCase)
-                        || x.getName().toLowerCase(Locale.US).contains(lowerCase)),
+                        || x.getName().toLowerCase(Locale.US).contains(lowerCase)
+                        || x.getSupplierId().toLowerCase(Locale.US).equals(lowerCase)),
                     search,
                     e -> show(e.getActionCommand()),
                     e -> destroy(e.getActionCommand(), search));

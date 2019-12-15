@@ -16,8 +16,9 @@
 - [x] Jump to top left corner after page switch
 - [x] Back button
 - [ ] Refine menu button focus and mouse pressed style
-- [ ] Check dependency before delete
+- [x] Check dependency before delete
 - [ ] Show products in supplier info page
-- [ ] Filter login records by date
-- [ ] Filter users and suppliers by status
+- [x] Filter login records by date
+- [x] Filter users and suppliers by status
 - [x] Dashboard suppliers and products
+- [x] Filter products by supplier ID

@@ -70,7 +70,9 @@ public final class UserController {
                     userRepository.filter(x ->
                         x.getId().toLowerCase(Locale.US).contains(lowerCase)
                         || x.getUsername().toLowerCase(Locale.US).contains(lowerCase)
-                        || x.getFullName().toLowerCase(Locale.US).contains(lowerCase)),
+                        || x.getFullName().toLowerCase(Locale.US).contains(lowerCase)
+                        || x.isActive() && "active".equals(lowerCase)
+                        || !x.isActive() && "inactive".equals(lowerCase)),
                     search,
                     e -> show(e.getActionCommand()));
         }

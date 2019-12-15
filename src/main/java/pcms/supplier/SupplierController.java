@@ -74,7 +74,9 @@ public final class SupplierController {
                     supplierRepository.filter(x ->
                         x.getId().toLowerCase(Locale.US).contains(lowerCase)
                         || x.getName().toLowerCase(Locale.US).contains(lowerCase)
-                        || x.getPhone().toLowerCase(Locale.US).contains(lowerCase)),
+                        || x.getPhone().toLowerCase(Locale.US).contains(lowerCase)
+                        || x.isActive() && "active".equals(lowerCase)
+                        || !x.isActive() && "inactive".equals(lowerCase)),
                     session.getUser().get().isAdministrator(), 
                     search,
                     e -> show(e.getActionCommand()));
